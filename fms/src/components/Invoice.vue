@@ -1,5 +1,5 @@
 <template>
-  <div class="posts">
+  <div class="invoices">
     This file will list all the posts.
 
     <div v-for="invoice in invoices">
