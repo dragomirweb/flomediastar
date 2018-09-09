@@ -13,13 +13,17 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'Homepage',
+      name: 'Dashboard',
       component: Homepage
     },
     {
       path: '/factura',
-      name: 'Invoice',
+      name: 'Factura',
       component: Invoice
+    },
+    {
+      path: '/chitanta',
+      name: 'Chitanta'
     }
   ]
 })
