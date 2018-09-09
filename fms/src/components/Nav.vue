@@ -3,7 +3,7 @@
 
   <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
 
-  <b-navbar-brand href="/">NavBar</b-navbar-brand>
+  <b-navbar-brand class="logo text-uppercase" href="/">Flomediastar</b-navbar-brand>
 
   <b-collapse is-nav id="nav_collapse">
 
@@ -46,6 +46,10 @@ export default {
   .bg-dark {
     background: linear-gradient(to bottom, rgb(40, 50, 68) 0%, rgba(21, 26, 35, 0.95) 100%);
     box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.2);
+  }
+
+  .logo {
+    color: white;
   }
 
   .navbar-default {
