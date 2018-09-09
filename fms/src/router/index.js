@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Homepage from '@/components/Homepage'
 import Invoice from '@/components/Invoice'
+import Chitanta from '@/components/Chitanta'
 
 Vue.use(Router)
 
@@ -23,7 +24,8 @@ export default new Router({
     },
     {
       path: '/chitanta',
-      name: 'Chitanta'
+      name: 'Chitanta',
+      component: Chitanta
     }
   ]
 })
