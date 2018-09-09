@@ -1,7 +1,13 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
-  </div>
+ <b-container >
+  <b-row>
+    <b-col cols="12">
+      <div class="time">
+        Data: {{ new Date() | moment("Do MMMM YYYY, h:mm:ss a") }}
+      </div>
+    </b-col>
+  </b-row>
+</b-container>
 </template>
 
 <script>
@@ -17,6 +23,10 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.time {
+  font-size: 1.3rem;
+  padding: 1.5rem;
+}
 h1, h2 {
   font-weight: normal;
 }
