@@ -15,7 +15,15 @@ app.get("/invoice", (req, res) => {
   res.send([
     {
       title: "factura-01",
-      description: "18-08-2018"
+      data: "18-08-2018"
+    },
+    {
+      title: "factura-02",
+      data: "19-08-2018"
+    },
+    {
+      title: "factura-03",
+      data: "20-08-2018"
     }
   ]);
 });
