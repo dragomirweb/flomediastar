@@ -53,7 +53,6 @@ export default {
   }
 
   .navbar-default {
-    height: 120px;
   }
 
   .nav-link a {

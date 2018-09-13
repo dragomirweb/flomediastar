@@ -1,23 +1,45 @@
 <template>
-  <div class="invoices">
-    This file will list all the posts.
-
-    <div v-for="invoice in invoices">
-      <p>
-        <span><b>{{ invoice.title }}</b></span><br />
-        <span>{{ invoice.description }}</span>
-      </p>
+  <div class="container">
+    <div class="row">
+      <div class="col-12 mt-5 ">
+        <h1> Lista facturi</h1>
+          <div class="invoices">
+            <b-list-group v-for="invoice in invoices" class="d-flex">
+              <b-list-group-item class="mb-2">
+                <h3 class="text-monospace text-uppercase">{{ invoice.title }}</h3>
+                 <span class="mr-2">
+                   <b >Data: </b>
+                   {{ invoice.data }}
+                 </span>
+                 <div class="d-flex">
+                   <button class="btn btn-sm btn-success ml-auto"
+                           @click="createPDF(invoice.title, invoice.data)"
+                   >
+                           Salveaza
+                  </button>
+                   <button class="btn btn-sm btn-info ml-1">Editeaza</button>
+                   <button class="btn btn-sm btn-danger ml-1">Sterge</button>
+                 </div>
+                 </b-list-group-item>
+            </b-list-group>
+          </div>
+      </div>
     </div>
   </div>
+
 </template>
 
 <script>
+import jsPDF from 'jspdf'
 import InvoiceService from '@/services/InvoiceService'
+
+
 export default {
   name: 'Invoice',
   data () {
     return {
-      invoices: []
+      invoices: [],
+      indent: 10
     }
   },
   mounted () {
@@ -27,7 +49,15 @@ export default {
     async getPosts () {
       const response = await InvoiceService.fetchInvoices()
       this.invoices = response.data
+    },
+    createPDF (pdfName, data) {
+      var doc = new jsPDF();
+      doc.text("titlu", 10, this.indent);
+      doc.save(pdfName + '-' + data + '.pdf');
     }
+  },
+  computed: {
+
   }
 }
 </script>
