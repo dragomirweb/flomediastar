@@ -13,10 +13,10 @@
                 <button class="btn btn-sm btn-success ml-auto"
                         @click="createPDF(invoice.title, invoice.data)"
                 >
-                        Salveaza
+                        PDF
                 </button>
-                <button class="btn btn-sm btn-info ml-1">Editeaza</button>
-                <button class="btn btn-sm btn-danger ml-1">Sterge</button>
+                <button class="btn btn-sm btn-info ml-1">Edit</button>
+                <button class="btn btn-sm btn-danger ml-1">Delete</button>
             </div>
             </b-list-group-item>
         </b-list-group>
@@ -38,10 +38,10 @@ export default {
     }
   },
   mounted () {
-    this.getPosts()
+    this.getInvoices()
   },
   methods: {
-    async getPosts () {
+    async getInvoices () {
       const response = await InvoiceService.fetchInvoices()
       this.invoices = response.data
     },
