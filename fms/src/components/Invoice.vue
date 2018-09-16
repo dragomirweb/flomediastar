@@ -1,59 +1,47 @@
 <template>
+<div class="id-111">
   <div class="container">
-    <div class="row">
-      <div class="col-12 mt-5 ">
-        <h1> Lista facturi</h1>
-          <div class="invoices">
-            <b-list-group v-for="invoice in invoices" class="d-flex">
-              <b-list-group-item class="mb-2">
-                <h3 class="text-monospace text-uppercase">{{ invoice.title }}</h3>
-                 <span class="mr-2">
-                   <b >Data: </b>
-                   {{ invoice.data }}
-                 </span>
-                 <div class="d-flex">
-                   <button class="btn btn-sm btn-success ml-auto"
-                           @click="createPDF(invoice.title, invoice.data)"
-                   >
-                           Salveaza
-                  </button>
-                   <button class="btn btn-sm btn-info ml-1">Editeaza</button>
-                   <button class="btn btn-sm btn-danger ml-1">Sterge</button>
-                 </div>
-                 </b-list-group-item>
-            </b-list-group>
-          </div>
-      </div>
-    </div>
+      <b-tabs class="w-100 mt-5">
+        <b-tab title="Factura noua" :title-link-class="linkClass(0)" active>
+          <generate-invoice />
+        </b-tab>
+        <b-tab title="Lista facturi" :title-link-class="linkClass(1)">
+          <invoice-list />
+        </b-tab>
+        <b-tab title="disabled" :title-link-class="linkClass(2)">
+          <br>Disabled tab!
+        </b-tab>
+      </b-tabs>
   </div>
+</div>
+
 
 </template>
 
 <script>
-import jsPDF from 'jspdf'
-import InvoiceService from '@/services/InvoiceService'
-
+import GenerateInvoice from '@/components/GenerateInvoice'
+import InvoiceList from '@/components/InvoiceList'
 
 export default {
   name: 'Invoice',
+  components: {
+    "InvoiceList": InvoiceList,
+    "GenerateInvoice": GenerateInvoice
+  },
   data () {
     return {
-      invoices: [],
-      indent: 10
+      tabIndex: 0
     }
   },
   mounted () {
-    this.getPosts()
   },
   methods: {
-    async getPosts () {
-      const response = await InvoiceService.fetchInvoices()
-      this.invoices = response.data
-    },
-    createPDF (pdfName, data) {
-      var doc = new jsPDF();
-      doc.text("titlu", 10, this.indent);
-      doc.save(pdfName + '-' + data + '.pdf');
+    linkClass (idx) {
+      if (this.tabIndex === idx) {
+        return ['bg-light', 'color-dark']
+      } else {
+        return ['bg-light', 'color-dark']
+      }
     }
   },
   computed: {
@@ -61,3 +49,8 @@ export default {
   }
 }
 </script>
+<style lang="scss" >
+.color-dark {
+  color: #343a40 !important;
+}
+</style>
