@@ -1,19 +1,17 @@
 <template>
 <div class="id-111">
   <div class="container">
-    <div class="row">
       <b-tabs class="w-100 mt-5">
-        <b-tab title="Factura noua" active>
-          
+        <b-tab title="Factura noua" :title-link-class="linkClass(0)" active>
+          <generate-invoice />
         </b-tab>
-        <b-tab title="Lista facturi">
-          <invoice-list/>
+        <b-tab title="Lista facturi" :title-link-class="linkClass(1)">
+          <invoice-list />
         </b-tab>
-        <b-tab title="disabled">
+        <b-tab title="disabled" :title-link-class="linkClass(2)">
           <br>Disabled tab!
         </b-tab>
       </b-tabs>
-    </div>
   </div>
 </div>
 
@@ -21,23 +19,38 @@
 </template>
 
 <script>
+import GenerateInvoice from '@/components/GenerateInvoice'
 import InvoiceList from '@/components/InvoiceList'
 
 export default {
   name: 'Invoice',
   components: {
-    "InvoiceList": InvoiceList
+    "InvoiceList": InvoiceList,
+    "GenerateInvoice": GenerateInvoice
   },
   data () {
     return {
+      tabIndex: 0
     }
   },
   mounted () {
   },
   methods: {
+    linkClass (idx) {
+      if (this.tabIndex === idx) {
+        return ['bg-light', 'color-dark']
+      } else {
+        return ['bg-light', 'color-dark']
+      }
+    }
   },
   computed: {
 
   }
 }
 </script>
+<style lang="scss" >
+.color-dark {
+  color: #343a40 !important;
+}
+</style>
