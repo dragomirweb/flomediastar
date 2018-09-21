@@ -13,14 +13,13 @@ app.use(bodyParser.json());
 app.use(cors());
 
 var data = [];
-var date = new Date();
 
 for (let index = 0; index < 40; index++) {
   data.push(
     {
       title: "factura-" + index,
       client: "client " + index,
-      data: moment().format("dddd, MMMM Do YYYY, h:mm:ss a")
+      data: new Date()
     }
   )
   
