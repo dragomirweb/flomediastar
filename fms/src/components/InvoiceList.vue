@@ -1,25 +1,31 @@
 <template>
 <div>
     <div class="w-100 mt-2">
-        <div class="d-flex my-4">
-            <div class="d-flex align-items-end w-50 mr-2">
+        <div class="d-flex mt-4 mb-1">
+            <div class="d-flex w-50 mr-2">
                 <b-form-input @click="clearSearch" v-model="searchInvoice" type="text" placeholder="Cauta factura"></b-form-input>
             </div>
-            <div class="w-50 d-flex">
+            <div class="w-25 d-flex mr-2">
                 <datepicker class="mr-1" :bootstrap-styling="true" @closed="clearSearch" v-model="searchInvoiceByDateStart">
                 </datepicker>
                 <datepicker :bootstrap-styling="true" @closed="clearSearch" v-model="searchInvoiceByDateEnd"></datepicker>
             </div>
+            <div class="w-25 d-flex">
+                <b-form-select v-model="selected" :options="showInvoices" class="mb-3" />
+            </div>
         </div>
         <div class="invoices">
-            <b-list-group v-for="invoice in filteredInvoices" :key="invoice.id" class="d-flex">
+            <div class="w-100 d-flex justify-content-center mt-5" v-if="filteredInvoices.length == 0">
+                <h1 class="text-info">Nu s-au gasit facturi! :(</h1>
+            </div>
+            <b-list-group v-for="invoice in filteredInvoices.slice(0, selected)" :key="invoice.id" class="d-flex">
                 <b-list-group-item class="mb-2">
-                    <h3 class="text-monospace text-uppercase">{{ invoice.title }}</h3>
-                    <h5 class="text-monospace text-uppercase">{{ invoice.client }}</h5>
-                    <span class="mr-2">
-                  <b >Data: </b>
-                  {{ invoice.data }}
-              </span>
+                    <h3 class="text-uppercase mb-0">{{ invoice.title }}</h3>
+                    <h5 class="text-uppercase">{{ invoice.client }}</h5>
+                    <span class="mr-2 text-grey">
+                        <b>Factura emisa la: </b>
+                        {{ invoice.data | moment }}
+                    </span>
                     <div class="d-flex">
                         <button class="btn btn-sm btn-success ml-auto"
                           @click="createPDF(invoice.title, invoice.data)"
@@ -56,10 +62,21 @@ export default {
             searchInvoiceByDateStart: new Date(),
             searchInvoiceByDateEnd: new Date(),
             dateSelected: false,
+            showItems: 1,
+            selected: 5,
+            showInvoices: [
+                { value: 5, text: 'Arata 5 Facturi' },
+                { value: 10, text: 'Arata 10 Facturi' },
+                { value: 15, text: 'Arata 15 Facturi' },
+                { value: 20, text: 'Arata 20 Facturi' },
+                { value: 50, text: 'Arata 50 Facturi'}
+            ]
         }
     },
     mounted() {
         this.getInvoices()
+    },
+    updated() {
     },
     methods: {
         async getInvoices() {
@@ -69,12 +86,12 @@ export default {
         createPDF(pdfName, data) {
             var doc = new jsPDF();
             doc.text("titlu", 10, this.indent);
-            doc.save(pdfName + '-' + data + '.pdf');
+            doc.save(pdfName.toUpperCase() + '-' + moment(data).format('D-M-YYYY') + '.pdf');
         },
         clearSearch() {
             this.searchInvoice = '';
             this.dateSelected = true;
-        }
+        },
     },
     computed: {
         filteredInvoices: function () {
@@ -101,12 +118,19 @@ export default {
                     return true;
                 }));
             };
-        },
+        }
 
+    },
+    filters: {
+        moment: function (date) {
+            return moment(date).format('D-M-YYYY');
+        }
     }
 }
 </script>
 
 <style lang="scss" scoped>
-
+    .text-grey {
+        color: darkgrey;
+    }
 </style>
