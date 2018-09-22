@@ -16,7 +16,7 @@
         </div>
         <div class="invoices">
             <div class="w-100 d-flex justify-content-center mt-5" v-if="filteredInvoices.length == 0">
-                <h1 class="text-info">Nu s-au gasit facturi! :(</h1>
+                <h1 class="text-info">Nu s-au gasit facturi! &#x1F600;</h1>
             </div>
             <b-list-group v-for="invoice in filteredInvoices.slice(0, selected)" :key="invoice.id" class="d-flex">
                 <b-list-group-item class="mb-2">
