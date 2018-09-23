@@ -17,7 +17,7 @@ var data = [];
 for (let index = 0; index < 40; index++) {
   data.push(
     {
-      title: "factura-" + index,
+      factura: "factura-" + index,
       client: "client " + index,
       data: new Date()
     }
