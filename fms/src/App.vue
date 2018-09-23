@@ -17,15 +17,18 @@ export default {
     },
     data () {
         return {
+            
         }
     },
+    created() {
+        this.$store.dispatch("storeInvoice")
+    },
     mounted () {
-        this.storeInvoice()
     },
     methods: {
-        ...mapActions({
-            storeInvoice: 'storeInvoice'
-        })     
+        ...mapActions([
+            'storeInvoice'
+        ]) 
     }
 }
 </script>
