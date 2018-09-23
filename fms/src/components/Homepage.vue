@@ -2,6 +2,7 @@
  <b-container >
   <b-row>
     <b-col cols="12">
+      {{ getState}}
       <div class="time">
         Data: {{ new Date() | moment("Do MMMM YYYY, h:mm:ss a") }}
       </div>
@@ -11,11 +12,17 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex'
+
 export default {
   name: 'Homepage',
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App'
+    }
+  },
+  computed: {
+    getState(){
+      return this.$store.state.product;
     }
   }
 }

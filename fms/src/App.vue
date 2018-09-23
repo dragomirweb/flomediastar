@@ -7,11 +7,25 @@
 
 <script>
 import Nav from "@/components/Nav";
+import InvoiceService from '@/services/InvoiceService'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
     name: 'App',
     components: {
         "Nav": Nav
+    },
+    data () {
+        return {
+        }
+    },
+    mounted () {
+        this.storeInvoice()
+    },
+    methods: {
+        ...mapActions({
+            storeInvoice: 'storeInvoice'
+        })     
     }
 }
 </script>
