@@ -6,6 +6,7 @@ import router from './router'
 import BootstrapVue from "bootstrap-vue"
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
+import { invoices } from './store/invoices'
 
 Vue.use(BootstrapVue)
 Vue.use(require('vue-moment'))
@@ -13,6 +14,7 @@ Vue.config.productionTip = false
 
 /* eslint-disable no-new */
 new Vue({
+  store: invoices,
   el: '#app',
   router,
   components: { App },

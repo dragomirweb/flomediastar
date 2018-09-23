@@ -11,12 +11,15 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex'
+
 export default {
   name: 'Homepage',
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App'
     }
+  },
+  computed: {
   }
 }
 </script>

@@ -1,5 +1,5 @@
 <template>
-<div class="id-111">
+<div>
   <div class="container">
       <b-tabs class="w-100 mt-5">
         <b-tab title="Factura noua" :title-link-class="linkClass(0)" active>
@@ -7,9 +7,6 @@
         </b-tab>
         <b-tab title="Lista facturi" :title-link-class="linkClass(1)">
           <invoice-list />
-        </b-tab>
-        <b-tab title="disabled" :title-link-class="linkClass(2)">
-          <br>Disabled tab!
         </b-tab>
       </b-tabs>
   </div>
