@@ -2,7 +2,6 @@
  <b-container >
   <b-row>
     <b-col cols="12">
-      {{ getState}}
       <div class="time">
         Data: {{ new Date() | moment("Do MMMM YYYY, h:mm:ss a") }}
       </div>
@@ -21,9 +20,6 @@ export default {
     }
   },
   computed: {
-    getState(){
-      return this.$store.state.product;
-    }
   }
 }
 </script>
