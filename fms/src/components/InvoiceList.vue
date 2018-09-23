@@ -20,7 +20,7 @@
             </div>
             <b-list-group v-for="invoice in filteredInvoices.slice(0, selected)" :key="invoice.id" class="d-flex">
                 <b-list-group-item class="mb-2">
-                    <h3 class="text-uppercase mb-0">{{ invoice.title }}</h3>
+                    <h3 class="text-uppercase mb-0">{{ invoice.factura }}</h3>
                     <h5 class="text-uppercase">{{ invoice.client }}</h5>
                     <span class="mr-2 text-grey">
                         <b>Factura emisa la: </b>
@@ -44,7 +44,7 @@
 
 <script>
 import jsPDF from 'jspdf'
-import InvoiceService from '@/services/InvoiceService'
+import { mapGetters, mapActions } from 'vuex'
 import Datepicker from 'vuejs-datepicker'
 import moment from 'moment'
 import _ from 'lodash'
@@ -65,23 +65,29 @@ export default {
             showItems: 1,
             selected: 5,
             showInvoices: [
-                { value: 5, text: 'Arata 5 Facturi' },
-                { value: 10, text: 'Arata 10 Facturi' },
-                { value: 15, text: 'Arata 15 Facturi' },
-                { value: 20, text: 'Arata 20 Facturi' },
+                { value: 5, text: 'Arata 5 Facturi'},
+                { value: 10, text: 'Arata 10 Facturi'},
+                { value: 15, text: 'Arata 15 Facturi'},
+                { value: 20, text: 'Arata 20 Facturi'},
                 { value: 50, text: 'Arata 50 Facturi'}
             ]
         }
     },
+    created() {
+        this.assignInvoices()
+        this.$store.dispatch("storeInvoice")
+    },
     mounted() {
-        this.getInvoices()
+        
     },
     updated() {
     },
     methods: {
-        async getInvoices() {
-            const response = await InvoiceService.fetchInvoices()
-            this.invoices = response.data;
+        ...mapActions([
+            'storeInvoice'
+        ]),
+        assignInvoices() {
+           return this.invoices = this.getInvoices;
         },
         createPDF(pdfName, data) {
             var doc = new jsPDF();
@@ -94,6 +100,9 @@ export default {
         },
     },
     computed: {
+        ...mapGetters({
+            getInvoices: 'getInvoices'
+        }),
         filteredInvoices: function () {
             var vm = this
             var startDate = Date.parse(vm.searchInvoiceByDateStart);
@@ -101,7 +110,7 @@ export default {
 
             if (vm.searchInvoice != '') {
                 return vm.invoices.filter((invoice) => {
-                    return invoice.title.match(vm.searchInvoice) ||
+                    return invoice.factura.match(vm.searchInvoice) ||
                         invoice.client.match(vm.searchInvoice);
                 });
             } else if (startDate <= endDate && vm.searchInvoice == '' && vm.dateSelected == true) {
@@ -118,7 +127,7 @@ export default {
                     return true;
                 }));
             };
-        }
+        },
 
     },
     filters: {
