@@ -131,7 +131,7 @@ export const pdf = function(data) {
     {
       theme: "striped",
       styles: {
-        cellPadding: 0,
+        cellPadding: 1,
         fontSize: 10
       },
       margin: { left: 405, top: 550 },

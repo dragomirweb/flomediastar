@@ -1,7 +1,7 @@
 <template>
 <div>
     <div class="w-100 mt-2">
-        <div class="d-flex mt-4 mb-1">
+        <div class="d-flex mt-4 mb-1" v-if="!showNewInvoice">
             <div class="d-flex w-50 mr-2">
                 <b-form-input @click="clearSearch" v-model="searchInvoice" type="text" placeholder="Cauta factura"></b-form-input>
             </div>
@@ -14,7 +14,7 @@
                 <b-form-select v-model="selected" :options="showInvoices" class="mb-3" />
             </div>
         </div>
-        <div class="invoices">
+        <div class="invoices" v-if="!showNewInvoice">
             <div class="w-100 d-flex justify-content-center mt-5" v-if="filteredInvoices.length == 0">
                 <h1 class="text-info">Nu s-au gasit facturi! &#x1F600;</h1>
             </div>
@@ -27,7 +27,7 @@
                         {{ invoice.factura.data | moment }}
                     </span>
                     <div class="d-flex">
-                        <button @click="log(invoice)" class="btn btn-sm btn-info ml-auto">Factura noua</button>
+                        <button @click="facturaNoua(invoice)" class="btn btn-sm btn-info ml-auto">Factura noua</button>
                         <button class="btn btn-sm btn-success ml-1"
                           @click="createPDF(invoice)"
                         >
@@ -38,7 +38,9 @@
                     </div>
                 </b-list-group-item>
             </b-list-group>
-            <generate-invoice v-if="1 != 1"></generate-invoice>
+        </div>
+        <div class="factura-noua" v-if="showNewInvoice">
+            <generate-invoice v-bind:newFactura="dataNewInvoice"> </generate-invoice>
         </div>
     </div>
 </div>
@@ -74,22 +76,17 @@ export default {
                 { value: 15, text: 'Arata 15 Facturi'},
                 { value: 20, text: 'Arata 20 Facturi'},
                 { value: 50, text: 'Arata 50 Facturi'}
-            ]
+            ],
+            showNewInvoice: false,
+            dataNewInvoice: Object
         }
     },
-    created() {
-        this.assignInvoices()
-        this.$store.dispatch("storeInvoice")
-    },
     mounted() {
-        
+        this.assignInvoices()
     },
     updated() {
     },
     methods: {
-        ...mapActions([
-            'storeInvoice'
-        ]),
         assignInvoices() {
            return this.invoices = this.getInvoices;
         },
@@ -100,8 +97,9 @@ export default {
             this.searchInvoice = '';
             this.dateSelected = true;
         },
-        log(param){
-            console.log(param)
+        facturaNoua(inv) {
+            this.showNewInvoice = true;
+            this.dataNewInvoice = inv;
         }
     },
     computed: {

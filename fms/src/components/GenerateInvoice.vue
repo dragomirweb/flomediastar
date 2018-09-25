@@ -1,6 +1,5 @@
 <template>
 <div>
-    <invoice-statistics />
     <div class="w-100 mt-4">
         <h3 v-if="showClientForm">Date Client</h3>
         <h3 v-if="!showClientForm">Date Factura</h3>
@@ -99,19 +98,19 @@
                 
             </b-form-group>
         </div>
-        <div class="d-flex flex-column align-items-end justify-content-end my-4 pr-2" v-if="!showClientForm && factura.totalFacturaPlusTva != 0">
+        <div class="d-flex flex-column align-items-end justify-content-end my-4 pr-2 border-bottom border-white" v-if="!showClientForm && factura.totalFacturaPlusTva != 0">
             <div class="h5 mb-0"><span class="text-info h4">Total:</span> {{factura.totalFactura.toFixed(2) | formatT}}</div>
             <div class="h5 mb-0"><span class="text-info h4">TVA 19%:</span> {{factura.totalFacturaTva.toFixed(2) | formatT}}</div>
             <div class="h5 mb-0"><span class="text-info h4">Platit:</span> 0</div>
             <div class="h5 "><span class="text-info h4">Total + TVA:</span> {{factura.totalFacturaPlusTva.toFixed(2) | formatT}}</div>
         </div>
-        <div class="d-flex" >
-            <div class="d-flex" v-if="factura.totalFactura != 0">
+        <div class="d-flex">
+            <div class="d-flex" v-if="factura.totalFactura != 0 && showClientForm == false">
                 <b-btn class="mt-3 w-auto mr-4" variant="outline-primary" block @click="addProduct">Adauga produs</b-btn>
             <b-btn class="mt-3 w-auto mr-4" variant="outline-danger" block @click="removeLastProduct">Sterge ultimul produs</b-btn>
             </div>
-            <div class="d-flex" v-if="!showClientForm">
-                <b-btn class="mt-3 w-auto mr-4" variant="outline-success" block @click="addProduct">Salveaza</b-btn>
+            <div class="d-flex ml-auto" v-if="!showClientForm">
+                <b-btn v-if="factura.totalFacturaPlusTva != 0" class="mt-3 w-auto mr-4" variant="outline-success" block @click="addProduct">Salveaza</b-btn>
                 <b-btn class="mt-3 w-auto" variant="outline-info" block @click="showClientForm = true">Modifica client</b-btn>
             </div>
         </div>
@@ -120,14 +119,11 @@
 </template>
 
 <script>
-import InvoiceStatistics from '@/components/InvoiceStatistics'
 import { mapGetters, mapActions } from 'vuex'
 
 export default {
     name: 'GenerateInvoice',
-    components: {
-        "InvoiceStatistics": InvoiceStatistics
-    },
+    props: ['newFactura'],
     data() {
         return {
             factura: {
@@ -156,6 +152,11 @@ export default {
     },
     created() {
         this.$store.dispatch("storeInvoice")
+    },
+    mounted () {
+        if(this.newFactura != undefined) {
+            this.factura = this.newFactura.factura
+        }
     },
     updated () {
         this.normalizeProducts()

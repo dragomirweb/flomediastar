@@ -3,9 +3,11 @@
   <div class="container">
       <b-tabs class="w-100 mt-5">
         <b-tab title="Factura noua" :title-link-class="linkClass(0)" active>
+          <invoice-statistics />
           <generate-invoice />
         </b-tab>
         <b-tab title="Lista facturi" :title-link-class="linkClass(1)">
+          <invoice-statistics />
           <invoice-list />
         </b-tab>
       </b-tabs>
@@ -18,12 +20,14 @@
 <script>
 import GenerateInvoice from '@/components/GenerateInvoice'
 import InvoiceList from '@/components/InvoiceList'
+import InvoiceStatistics from '@/components/InvoiceStatistics'
 
 export default {
   name: 'Invoice',
   components: {
     "InvoiceList": InvoiceList,
-    "GenerateInvoice": GenerateInvoice
+    "GenerateInvoice": GenerateInvoice,
+    "InvoiceStatistics": InvoiceStatistics
   },
   data () {
     return {

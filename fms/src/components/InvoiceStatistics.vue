@@ -16,10 +16,11 @@
         <div class="w-25 border border-info pl-2 mr-2">
             <h4 class="py-3 h6 mb-0">Data: <span class="text-info font-weight-bold">{{ new Date() | moment("D-M-YYYY") }}</span></h4>
         </div>
-        <div class="w-25 border border-info pl-2 mr-2">
+        <div class="w-25 border border-info pl-2">
             <h4 class="py-3 h6 mb-0">Ultimul client facturat: <span class="text-info font-weight-bold text-uppercase">{{ lastClient }}</span></h4>
         </div>
     </div>
+    
 </div>
 </template>
 
@@ -36,12 +37,18 @@ export default {
             invoices: []
         }
     },
+    created() {
+        this.$store.dispatch("storeInvoice")
+    },
     mounted() {
         this.assignInvoices()
     },
     methods: {
-        async assignInvoices() {
-            return this.invoices = await this.getInvoices;
+        ...mapActions([
+            'storeInvoice'
+        ]),
+       assignInvoices() {
+            return this.invoices = this.getInvoices;
         },
     },
     computed: {
@@ -50,12 +57,12 @@ export default {
         }),
         lastInvoice() {
             if (this.invoices.length !== 0) {
-                return this.invoices[this.invoices.length - 1].factura;
+                return this.invoices[this.invoices.length - 1].factura.factura;
             }
         },
         lastClient() {
             if (this.invoices.length !== 0) {
-                return this.invoices[this.invoices.length - 1].client;
+                return this.invoices[this.invoices.length - 1].factura.firma;
             }
         }
     }
