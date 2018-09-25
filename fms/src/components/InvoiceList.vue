@@ -18,41 +18,45 @@
             <div class="w-100 d-flex justify-content-center mt-5" v-if="filteredInvoices.length == 0">
                 <h1 class="text-info">Nu s-au gasit facturi! &#x1F600;</h1>
             </div>
-            <b-list-group v-for="invoice in filteredInvoices.slice(0, selected)" :key="invoice.id" class="d-flex">
+            <b-list-group v-for="(invoice, index) in filteredInvoices.slice(0, selected)" :key="invoice.id" class="d-flex">
                 <b-list-group-item class="mb-2">
-                    <h3 class="text-uppercase mb-0">{{ invoice.factura }}</h3>
-                    <h5 class="text-uppercase">{{ invoice.client }}</h5>
+                    <h3 class="text-uppercase mb-0">{{ invoice.factura.factura }}</h3>
+                    <h5 class="text-uppercase">{{ invoice.factura.firma }}</h5>
                     <span class="mr-2 text-grey">
                         <b>Factura emisa la: </b>
-                        {{ invoice.data | moment }}
+                        {{ invoice.factura.data | moment }}
                     </span>
                     <div class="d-flex">
-                        <button class="btn btn-sm btn-success ml-auto"
-                          @click="createPDF(invoice.title, invoice.data)"
-                  >
+                        <button @click="log(invoice)" class="btn btn-sm btn-info ml-auto">Factura noua</button>
+                        <button class="btn btn-sm btn-success ml-1"
+                          @click="createPDF(invoice)"
+                        >
                           PDF
-                  </button>
+                        </button>
                         <button class="btn btn-sm btn-info ml-1">Edit</button>
                         <button class="btn btn-sm btn-danger ml-1">Delete</button>
                     </div>
                 </b-list-group-item>
             </b-list-group>
+            <generate-invoice v-if="1 != 1"></generate-invoice>
         </div>
     </div>
 </div>
 </template>
 
 <script>
-import jsPDF from 'jspdf'
+import { pdf } from '../pdf/invoice.js'
 import { mapGetters, mapActions } from 'vuex'
 import Datepicker from 'vuejs-datepicker'
 import moment from 'moment'
+import GenerateInvoice from '@/components/GenerateInvoice'
 import _ from 'lodash'
 
 export default {
     name: 'InvoiceList',
     components: {
-        "Datepicker": Datepicker
+        "Datepicker": Datepicker,
+        "GenerateInvoice": GenerateInvoice
     },
     data() {
         return {
@@ -89,15 +93,16 @@ export default {
         assignInvoices() {
            return this.invoices = this.getInvoices;
         },
-        createPDF(pdfName, data) {
-            var doc = new jsPDF();
-            doc.text("titlu", 10, this.indent);
-            doc.save(pdfName.toUpperCase() + '-' + moment(data).format('D-M-YYYY') + '.pdf');
+        createPDF(data) {
+            pdf(data)
         },
         clearSearch() {
             this.searchInvoice = '';
             this.dateSelected = true;
         },
+        log(param){
+            console.log(param)
+        }
     },
     computed: {
         ...mapGetters({
@@ -110,15 +115,15 @@ export default {
 
             if (vm.searchInvoice != '') {
                 return vm.invoices.filter((invoice) => {
-                    return invoice.factura.match(vm.searchInvoice) ||
-                        invoice.client.match(vm.searchInvoice);
+                    return invoice.factura.factura.match(vm.searchInvoice) ||
+                           invoice.factura.firma.match(vm.searchInvoice);
                 });
             } else if (startDate <= endDate && vm.searchInvoice == '' && vm.dateSelected == true) {
                 return _.filter(vm.invoices, (function (data) {
                     if ((_.isNull(startDate) && _.isNull(endDate))) {
                         return true
                     } else {
-                        var date = Date.parse(data.data);
+                        var date = Date.parse(data.factura.data);
                         return (date >= startDate && date <= endDate);
                     }
                 }));
