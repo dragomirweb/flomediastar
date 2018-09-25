@@ -76,8 +76,8 @@
                 <b-form-input id="clientSucursala" type="text" v-model="factura.sucursala" required placeholder="Sucursala">
                 </b-form-input>
             </b-form-group>
-            <b-button type="submit" variant="success">Salveaza</b-button>
-            <b-button type="reset" variant="danger">Reseteaza formular</b-button>
+            <b-button type="submit" variant="outline-success">Adauga produse</b-button>
+            <b-button type="reset" variant="outline-danger">Reseteaza client</b-button>
         </b-form>
         <div class="mt-4" v-if="!showClientForm" v-for="product in factura.produse" :key="product.id">
             <b-form-group horizontal breakpoint="lg" label="" label-size="lg" label-class="font-weight-bold pt-0" class="mb-0 border-bottom border-secondary">
@@ -105,10 +105,15 @@
             <div class="h5 mb-0"><span class="text-info h4">Platit:</span> 0</div>
             <div class="h5 "><span class="text-info h4">Total + TVA:</span> {{factura.totalFacturaPlusTva.toFixed(2) | formatT}}</div>
         </div>
-        <div class="d-flex" v-if="!showClientForm">
-            <b-btn class="mt-3 w-auto mr-4" variant="outline-primary" block @click="addProduct">Adauga produs</b-btn>
+        <div class="d-flex" >
+            <div class="d-flex" v-if="factura.totalFactura != 0">
+                <b-btn class="mt-3 w-auto mr-4" variant="outline-primary" block @click="addProduct">Adauga produs</b-btn>
             <b-btn class="mt-3 w-auto mr-4" variant="outline-danger" block @click="removeLastProduct">Sterge ultimul produs</b-btn>
-            <b-btn class="mt-3 w-auto" variant="outline-info" block @click="showClientForm = true">Modifica client</b-btn>
+            </div>
+            <div class="d-flex" v-if="!showClientForm">
+                <b-btn class="mt-3 w-auto mr-4" variant="outline-success" block @click="addProduct">Salveaza</b-btn>
+                <b-btn class="mt-3 w-auto" variant="outline-info" block @click="showClientForm = true">Modifica client</b-btn>
+            </div>
         </div>
     </div>
 </div>
@@ -126,7 +131,9 @@ export default {
     data() {
         return {
             factura: {
+                factura: '',
                 firma: '1',
+                data: new Date,
                 nrRegCom: '1',
                 cif: '1',
                 sediul: '1',
@@ -151,7 +158,7 @@ export default {
         this.$store.dispatch("storeInvoice")
     },
     updated () {
-        this.test()
+        this.normalizeProducts()
         this.getTotals()
     },
     methods: {
@@ -202,9 +209,11 @@ export default {
         removeLastProduct() {
             this.factura.produse.splice(-1, 1);
         },
-        test() {
+        normalizeProducts() {
             this.factura.produse.forEach(el => {
                 el.valoarea = parseFloat(el.pret) * parseInt(el.cantitatea);
+                el.cantitatea = parseFloat(el.cantitatea);
+                el.pret = parseFloat(el.pret);
             });
         },
         getTotals(){
