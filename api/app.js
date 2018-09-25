@@ -17,9 +17,27 @@ var data = [];
 for (let index = 0; index < 40; index++) {
   data.push(
     {
-      factura: "factura-" + index,
-      client: "client " + index,
-      data: new Date()
+      factura: {
+        factura: 'factura-' + index,
+        firma: 'client ' + index,
+        data: new Date(),
+        nrRegCom: '1',
+        cif: '1',
+        sediul: '1',
+        contBancar: '1',
+        banca: '1',
+        sucursala: '1',
+        produse: [{
+            descriere: 'Prestari servicii',
+            unitate: '',
+            pret: 0,
+            cantitatea: 0,
+            valoarea: 0
+        }],
+        totalFactura: 0,
+        totalFacturaTva: 0,
+        totalFacturaPlusTva: 0
+      }
     }
   )
   
