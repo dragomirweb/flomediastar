@@ -38,15 +38,11 @@ export default {
         }
     },
     created() {
-        this.$store.dispatch("storeInvoice")
     },
     mounted() {
         this.assignInvoices()
     },
     methods: {
-        ...mapActions([
-            'storeInvoice'
-        ]),
        assignInvoices() {
             return this.invoices = this.getInvoices;
         },
@@ -64,6 +60,11 @@ export default {
             if (this.invoices.length !== 0) {
                 return this.invoices[this.invoices.length - 1].factura.firma;
             }
+        }
+    },
+    watch: {
+        'getInvoices': function (){
+            this.assignInvoices()
         }
     }
 }

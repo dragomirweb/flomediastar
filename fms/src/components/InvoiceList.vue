@@ -1,7 +1,7 @@
 <template>
 <div>
     <div class="w-100 mt-2">
-        <div class="d-flex mt-4 mb-1" v-if="!showNewInvoice">
+        <div class="d-flex mt-4 mb-1" v-if="!newInvoiceFromDetails">
             <div class="d-flex w-50 mr-2">
                 <b-form-input @click="clearSearch" v-model="searchInvoice" type="text" placeholder="Cauta factura"></b-form-input>
             </div>
@@ -14,7 +14,7 @@
                 <b-form-select v-model="selected" :options="showInvoices" class="mb-3" />
             </div>
         </div>
-        <div class="invoices" v-if="!showNewInvoice">
+        <div class="invoices" v-if="!newInvoiceFromDetails">
             <div class="w-100 d-flex justify-content-center mt-5" v-if="filteredInvoices.length == 0">
                 <h1 class="text-info">Nu s-au gasit facturi! &#x1F600;</h1>
             </div>
@@ -27,11 +27,16 @@
                         {{ invoice.factura.data | moment }}
                     </span>
                     <div class="d-flex">
-                        <button @click="facturaNoua(invoice)" class="btn btn-sm btn-info ml-auto">Factura noua</button>
+                        <button @click="facturaNoua(invoice)" class="btn btn-sm btn-info ml-auto">Factura cu datele existente</button>
                         <button class="btn btn-sm btn-success ml-1"
                           @click="createPDF(invoice)"
                         >
                           PDF
+                        </button>
+                        <button class="btn btn-sm btn-success ml-1"
+                          @click="createChitanta(invoice)"
+                        >
+                          Chitanta
                         </button>
                         <button class="btn btn-sm btn-info ml-1">Edit</button>
                         <button class="btn btn-sm btn-danger ml-1">Delete</button>
@@ -39,8 +44,8 @@
                 </b-list-group-item>
             </b-list-group>
         </div>
-        <div class="factura-noua" v-if="showNewInvoice">
-            <generate-invoice v-bind:newFactura="dataNewInvoice"> </generate-invoice>
+        <div class="factura-noua" v-if="newInvoiceFromDetails">
+            <generate-invoice invAction="newInvoice" v-bind:newFactura="dataNewInvoice"> </generate-invoice>
         </div>
     </div>
 </div>
@@ -48,6 +53,7 @@
 
 <script>
 import { pdf } from '../pdf/invoice.js'
+import { chitanta } from '../pdf/invoice.js'
 import { mapGetters, mapActions } from 'vuex'
 import Datepicker from 'vuejs-datepicker'
 import moment from 'moment'
@@ -77,7 +83,6 @@ export default {
                 { value: 20, text: 'Arata 20 Facturi'},
                 { value: 50, text: 'Arata 50 Facturi'}
             ],
-            showNewInvoice: false,
             dataNewInvoice: Object
         }
     },
@@ -85,6 +90,9 @@ export default {
         this.assignInvoices()
     },
     updated() {
+        if(this.invoices != this.getInvoices){
+            this.assignInvoices()
+        }
     },
     methods: {
         assignInvoices() {
@@ -93,18 +101,23 @@ export default {
         createPDF(data) {
             pdf(data)
         },
+        createChitanta(data) {
+            chitanta(data)
+        },
         clearSearch() {
             this.searchInvoice = '';
             this.dateSelected = true;
         },
         facturaNoua(inv) {
-            this.showNewInvoice = true;
+            this.$store.state.newInvoiceFromDetails = true;
             this.dataNewInvoice = inv;
         }
     },
     computed: {
         ...mapGetters({
-            getInvoices: 'getInvoices'
+            getInvoices: 'getInvoices',
+            newInvoiceFromDetails: 'newInvoiceFromDetails',
+            editInvoice: 'editInvoice'
         }),
         filteredInvoices: function () {
             var vm = this
@@ -137,6 +150,9 @@ export default {
         moment: function (date) {
             return moment(date).format('D-M-YYYY');
         }
+    },
+    watch: {
+        
     }
 }
 </script>

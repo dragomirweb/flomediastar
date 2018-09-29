@@ -95,7 +95,7 @@
                 <b-form-group horizontal label="Valoarea:" label-class="text-sm-right" label-for="nestedState">
                     <b-form-input v-model="product.valoarea" disabled type="number"></b-form-input>
                 </b-form-group>
-                
+
             </b-form-group>
         </div>
         <div class="d-flex flex-column align-items-end justify-content-end my-4 pr-2 border-bottom border-white" v-if="!showClientForm && factura.totalFacturaPlusTva != 0">
@@ -107,11 +107,12 @@
         <div class="d-flex">
             <div class="d-flex" v-if="factura.totalFactura != 0 && showClientForm == false">
                 <b-btn class="mt-3 w-auto mr-4" variant="outline-primary" block @click="addProduct">Adauga produs</b-btn>
-            <b-btn class="mt-3 w-auto mr-4" variant="outline-danger" block @click="removeLastProduct">Sterge ultimul produs</b-btn>
+                <b-btn class="mt-3 w-auto mr-4" variant="outline-danger" block @click="removeLastProduct">Sterge ultimul produs</b-btn>
             </div>
             <div class="d-flex ml-auto" v-if="!showClientForm">
-                <b-btn v-if="factura.totalFacturaPlusTva != 0" class="mt-3 w-auto mr-4" variant="outline-success" block @click="addProduct">Salveaza</b-btn>
-                <b-btn class="mt-3 w-auto" variant="outline-info" block @click="showClientForm = true">Modifica client</b-btn>
+                <b-btn v-if="factura.totalFacturaPlusTva != 0" class="mt-3 w-auto mr-4" variant="outline-success" block @click="saveInvoice">Salveaza</b-btn>
+                <b-btn class="mt-3 w-auto mr-4" variant="outline-info" block @click="showClientForm = true">Modifica client</b-btn>
+                <b-btn class="mt-3 w-auto" variant="outline-danger" block @click="resetGenerateInvoice">Renunta</b-btn>
             </div>
         </div>
     </div>
@@ -119,11 +120,15 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
+import {
+    mapGetters,
+    mapActions,
+mapMutations
+} from 'vuex'
 
 export default {
     name: 'GenerateInvoice',
-    props: ['newFactura'],
+    props: ['newFactura', 'invAction'],
     data() {
         return {
             factura: {
@@ -151,21 +156,20 @@ export default {
         }
     },
     created() {
-        this.$store.dispatch("storeInvoice")
     },
-    mounted () {
-        if(this.newFactura != undefined) {
-            this.factura = this.newFactura.factura
+    mounted() {
+        if (this.invAction === 'newInvoice') {
+            this.generateNewInvoiceWithData;
         }
     },
-    updated () {
+    updated() {
         this.normalizeProducts()
         this.getTotals()
     },
     methods: {
-        ...mapActions([
-            'storeInvoice'
-        ]),
+        ...mapActions({
+            addNewInvoice: 'addNewInvoice'
+        }),
         onSubmit(evt) {
             evt.preventDefault();
             // alert(JSON.stringify(this.form));
@@ -205,7 +209,6 @@ export default {
                 cantitatea: 0,
                 valoarea: 0
             });
-            console.log(this.factura)
         },
         removeLastProduct() {
             this.factura.produse.splice(-1, 1);
@@ -217,7 +220,7 @@ export default {
                 el.pret = parseFloat(el.pret);
             });
         },
-        getTotals(){
+        getTotals() {
             var total = 0;
             var vm = this;
 
@@ -225,16 +228,43 @@ export default {
                 total += el.valoarea;
             });
             vm.factura.totalFactura = parseFloat(total);
-            vm.factura.totalFacturaTva = vm.factura.totalFactura*0.19;
+            vm.factura.totalFacturaTva = vm.factura.totalFactura * 0.19;
             vm.factura.totalFacturaPlusTva = vm.factura.totalFactura + vm.factura.totalFacturaTva;
+        },
+        saveInvoice(){
+            this.factura.factura = 'factura-' + this.getInvoices.length;
+            if(this.invAction === 'newInvoice'){
+                this.addNewInvoice({factura: this.factura})
+            } else {
+                this.addNewInvoice({factura: this.factura})
+            }
+        },
+        resetGenerateInvoice(){
+            if(this.invAction === 'newInvoice'){
+                this.$store.state.newInvoiceFromDetails = false;
+            } else {
+                this.showClientForm = true;
+            }
+
         }
     },
     computed: {
-        
-        
+        ...mapGetters({
+            getInvoices: 'getInvoices',
+        }),
+        generateNewInvoiceWithData(){
+            const data = this.newFactura.factura;
+            let newData = this.factura;
+
+            for (var key in data) {
+                if (data.hasOwnProperty(key)) {
+                    newData[key] = data[key]
+                }
+            };
+        }
     },
     filters: {
-        formatT(val){
+        formatT(val) {
             return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         }
     }
