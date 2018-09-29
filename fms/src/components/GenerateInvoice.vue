@@ -128,7 +128,7 @@ mapMutations
 
 export default {
     name: 'GenerateInvoice',
-    props: ['newFactura', 'invAction'],
+    props: ['newFactura', 'invAction', 'editInvoice'],
     data() {
         return {
             factura: {
@@ -160,6 +160,8 @@ export default {
     mounted() {
         if (this.invAction === 'newInvoice') {
             this.generateNewInvoiceWithData;
+        } else if (this.invAction === 'editInvoice'){
+            this.editCurrentInvoice;
         }
     },
     updated() {
@@ -232,9 +234,11 @@ export default {
             vm.factura.totalFacturaPlusTva = vm.factura.totalFactura + vm.factura.totalFacturaTva;
         },
         saveInvoice(){
-            this.factura.factura = 'factura-' + this.getInvoices.length;
             if(this.invAction === 'newInvoice'){
+                this.factura.factura = 'factura-' + this.getInvoices.length;
                 this.addNewInvoice({factura: this.factura})
+            } else if(this.invAction === 'editInvoice'){
+                this.$store.state.editInvoice = false;
             } else {
                 this.addNewInvoice({factura: this.factura})
             }
@@ -242,6 +246,8 @@ export default {
         resetGenerateInvoice(){
             if(this.invAction === 'newInvoice'){
                 this.$store.state.newInvoiceFromDetails = false;
+            } else if(this.invAction === 'editInvoice'){
+                this.$store.state.editInvoice = false;
             } else {
                 this.showClientForm = true;
             }
@@ -261,6 +267,10 @@ export default {
                     newData[key] = data[key]
                 }
             };
+        },
+        editCurrentInvoice(){
+            const data = this.editInvoice.factura;
+            this.factura = data;
         }
     },
     filters: {

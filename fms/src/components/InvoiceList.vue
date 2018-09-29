@@ -1,7 +1,7 @@
 <template>
 <div>
     <div class="w-100 mt-2">
-        <div class="d-flex mt-4 mb-1" v-if="!newInvoiceFromDetails">
+        <div class="d-flex mt-4 mb-1" v-if="!newInvoiceFromDetails && !editInvoice">
             <div class="d-flex w-50 mr-2">
                 <b-form-input @click="clearSearch" v-model="searchInvoice" type="text" placeholder="Cauta factura"></b-form-input>
             </div>
@@ -14,7 +14,7 @@
                 <b-form-select v-model="selected" :options="showInvoices" class="mb-3" />
             </div>
         </div>
-        <div class="invoices" v-if="!newInvoiceFromDetails">
+        <div class="invoices" v-if="!newInvoiceFromDetails && !editInvoice">
             <div class="w-100 d-flex justify-content-center mt-5" v-if="filteredInvoices.length == 0">
                 <h1 class="text-info">Nu s-au gasit facturi! &#x1F600;</h1>
             </div>
@@ -38,7 +38,7 @@
                         >
                           Chitanta
                         </button>
-                        <button class="btn btn-sm btn-info ml-1">Edit</button>
+                        <button @click="editeazaFactura(invoice)" class="btn btn-sm btn-info ml-1">Edit</button>
                         <button class="btn btn-sm btn-danger ml-1">Delete</button>
                     </div>
                 </b-list-group-item>
@@ -46,6 +46,9 @@
         </div>
         <div class="factura-noua" v-if="newInvoiceFromDetails">
             <generate-invoice invAction="newInvoice" v-bind:newFactura="dataNewInvoice"> </generate-invoice>
+        </div>
+        <div class="factura-noua" v-if="editInvoice">
+            <generate-invoice invAction="editInvoice" v-bind:editInvoice="editInvoiceObj"> </generate-invoice>
         </div>
     </div>
 </div>
@@ -83,7 +86,8 @@ export default {
                 { value: 20, text: 'Arata 20 Facturi'},
                 { value: 50, text: 'Arata 50 Facturi'}
             ],
-            dataNewInvoice: Object
+            dataNewInvoice: Object,
+            editInvoiceObj: Object
         }
     },
     mounted() {
@@ -111,13 +115,18 @@ export default {
         facturaNoua(inv) {
             this.$store.state.newInvoiceFromDetails = true;
             this.dataNewInvoice = inv;
+        },
+        editeazaFactura(inv) {
+            this.$store.state.editInvoice = true;
+            this.editInvoiceObj = inv;
         }
     },
     computed: {
         ...mapGetters({
             getInvoices: 'getInvoices',
             newInvoiceFromDetails: 'newInvoiceFromDetails',
-            editInvoice: 'editInvoice'
+            editInvoice: 'editInvoice',
+            
         }),
         filteredInvoices: function () {
             var vm = this
