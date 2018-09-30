@@ -169,7 +169,7 @@ export const chitanta = function(data) {
   var invLitere = toLitere(inv.totalFacturaPlusTva.toFixed(2).toString().split('.')[0]);
   
   if (bani[1] != '00'){
-    invBani = 'lei si ' + toLitere(bani[1]) + 'de bani ';
+    invBani = 'lei si ' + toLitere(bani[1]) + 'bani ';
   }
   doc.autoTable([[""]], [["Chitanta"]], {
     theme: "plain",

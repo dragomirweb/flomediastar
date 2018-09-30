@@ -170,7 +170,8 @@ export default {
     },
     methods: {
         ...mapActions({
-            addNewInvoice: 'addNewInvoice'
+            addNewInvoice: 'addNewInvoice',
+            editExistingInvoice: 'editExistingInvoice'
         }),
         onSubmit(evt) {
             evt.preventDefault();
@@ -239,6 +240,7 @@ export default {
                 this.addNewInvoice({factura: this.factura})
             } else if(this.invAction === 'editInvoice'){
                 this.$store.state.editInvoice = false;
+                this.editExistingInvoice();
             } else {
                 this.addNewInvoice({factura: this.factura})
             }

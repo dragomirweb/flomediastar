@@ -30,6 +30,9 @@ export const invoices = new Vuex.Store({
     },
     editExistingInvoice({ commit }, payload) {
       commit("editExistingInvoice", payload);
+    },
+    deleteInvoice({ commit }, payload) {
+      commit("deleteInvoice", payload);
     }
   },
   mutations: {
@@ -41,7 +44,12 @@ export const invoices = new Vuex.Store({
       state.newInvoiceFromDetails = false;
     },
     editExistingInvoice: (state, payload) => {
-      state.invoices = [...state.invoices, payload];
-    }
+      // state.invoices = [...state.invoices, payload];
+      console.log('edited an invoice')
+    },
+    deleteInvoice: (state, payload) => {
+      const index = state.invoices.indexOf(payload);
+      state.invoices.splice(index, 1);
+    },
   }
 });

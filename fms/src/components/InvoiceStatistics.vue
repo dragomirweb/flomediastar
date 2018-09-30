@@ -17,7 +17,7 @@
             <h4 class="py-3 h6 mb-0">Data: <span class="text-info font-weight-bold">{{ new Date() | moment("D-M-YYYY") }}</span></h4>
         </div>
         <div class="w-25 border border-info pl-2">
-            <h4 class="py-3 h6 mb-0">Ultimul client facturat: <span class="text-info font-weight-bold text-uppercase">{{ lastClient }}</span></h4>
+            <h4 class="py-3 h6 mb-0">Ultimul client: <span class="text-info font-weight-bold text-uppercase">{{ lastClient }}</span></h4>
         </div>
     </div>
     

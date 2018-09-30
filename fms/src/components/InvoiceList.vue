@@ -20,12 +20,24 @@
             </div>
             <b-list-group v-for="(invoice, index) in filteredInvoices.slice(0, selected)" :key="invoice.id" class="d-flex">
                 <b-list-group-item class="mb-2">
-                    <h3 class="text-uppercase mb-0">{{ invoice.factura.factura }}</h3>
-                    <h5 class="text-uppercase">{{ invoice.factura.firma }}</h5>
+                    <h3 class="text-uppercase mb-0">Factura: {{ invoice.factura.factura }}</h3>
+                    <h5 class="text-uppercase">Firma: {{ invoice.factura.firma }}</h5>
                     <span class="mr-2 text-grey">
                         <b>Factura emisa la: </b>
                         {{ invoice.factura.data | moment }}
                     </span>
+                    <div>
+                        <span class="mr-2 text-grey">
+                        <b>Total: </b>
+                        {{ invoice.factura.totalFactura}}
+                    </span>
+                    </div>
+                    <div>
+                        <span class="mr-2 text-grey">
+                        <b>Total + TVA: </b>
+                        {{ invoice.factura.totalFacturaPlusTva}}
+                    </span>
+                    </div>
                     <div class="d-flex">
                         <button @click="facturaNoua(invoice)" class="btn btn-sm btn-info ml-auto">Factura cu datele existente</button>
                         <button class="btn btn-sm btn-success ml-1"
@@ -39,7 +51,7 @@
                           Chitanta
                         </button>
                         <button @click="editeazaFactura(invoice)" class="btn btn-sm btn-info ml-1">Edit</button>
-                        <button class="btn btn-sm btn-danger ml-1">Delete</button>
+                        <button @click="deleteInvoiceModalShow(invoice)" class="btn btn-sm btn-danger ml-1">Delete</button>
                     </div>
                 </b-list-group-item>
             </b-list-group>
@@ -50,6 +62,21 @@
         <div class="factura-noua" v-if="editInvoice">
             <generate-invoice invAction="editInvoice" v-bind:editInvoice="editInvoiceObj"> </generate-invoice>
         </div>
+        <b-modal ref="deleteInvoiceModal" hide-footer title="Sterge factura">
+            <div class="d-block text-center">
+                <h3>Esti sigur ca vrei sa stergi ?</h3>
+            </div>
+            <div class="d-block text-center mt-5">
+                Numar factura:  <strong>{{ deletedInvoiceId }}</strong>
+            </div>
+            <div class="d-block text-center mb-5">
+                Client:  <strong>{{ deletedInvoiceClient }}</strong>
+            </div>
+            <div class="d-flex">
+                <b-btn class="mt-3 w-auto mr-3" variant="outline-success" block @click="deleteInvoice">Sterge</b-btn>
+                <b-btn class="mt-3 w-auto" variant="outline-danger" block @click="deleteInvoiceModalHide">Nu sterge</b-btn>
+            </div>
+        </b-modal>
     </div>
 </div>
 </template>
@@ -87,7 +114,11 @@ export default {
                 { value: 50, text: 'Arata 50 Facturi'}
             ],
             dataNewInvoice: Object,
-            editInvoiceObj: Object
+            editInvoiceObj: Object,
+            deleteInvoiceObj: Object,
+            deletedInvoiceId: '',
+            deletedInvoiceClient: ''
+
         }
     },
     mounted() {
@@ -99,6 +130,9 @@ export default {
         }
     },
     methods: {
+        ...mapActions({
+            deleteInv: 'deleteInvoice'
+        }),
         assignInvoices() {
            return this.invoices = this.getInvoices;
         },
@@ -119,6 +153,20 @@ export default {
         editeazaFactura(inv) {
             this.$store.state.editInvoice = true;
             this.editInvoiceObj = inv;
+        },
+        deleteInvoiceModalShow (inv) {
+            this.deleteInvoiceObj = inv;
+            this.deletedInvoiceId = inv.factura.factura;
+            this.deletedInvoiceClient = inv.factura.firma;
+            this.$refs.deleteInvoiceModal.show()
+        },
+        deleteInvoice(){
+            this.deleteInv(this.deleteInvoiceObj).then(
+                this.$refs.deleteInvoiceModal.hide()
+            );
+        },
+        deleteInvoiceModalHide () {
+         this.$refs.deleteInvoiceModal.hide()
         }
     },
     computed: {
