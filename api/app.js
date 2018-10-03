@@ -13,6 +13,7 @@ app.use(bodyParser.json());
 app.use(cors());
 
 var data = [];
+var sitLucrari = [];
 
 for (let index = 0; index < 40; index++) {
   data.push(
@@ -39,10 +40,31 @@ for (let index = 0; index < 40; index++) {
         totalFacturaPlusTva: 0
       }
     }
-  )
-  
+  );
 };
+for (let index = 0; index < 40; index++) {
+  sitLucrari.push(
+    {
+      situatielucrari: {
+        situatie: 'Situatie lucrari nr. ' + index + '/' + moment(new Date()).format('D-M-YYYY'),
+        data: moment(new Date()).format('D-M-YYYY'),
+        produse: [{
+            nrcrt: 0,
+            denumire: '',
+            cantitatea: 0,
+            pret: 0
+        }],
+        totalCantitate: 0,
+        totalPret: 0
+      }
+    }
+  );
+};
+
 app.get("/invoice", (req, res) => {
   res.send(data);
+});
+app.get("/situatie-lucrari", (req, res) => {
+  res.send(sitLucrari);
 });
 app.listen(process.env.PORT || 8081);

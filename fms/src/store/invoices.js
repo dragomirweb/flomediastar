@@ -7,12 +7,16 @@ Vue.use(Vuex);
 export const invoices = new Vuex.Store({
   state: {
     invoices: [],
+    sitLucrari: [],
     newInvoiceFromDetails: false,
     editInvoice: false
   },
   getters: {
     getInvoices: state => {
       return state.invoices;
+    },
+    gSituatieLucrari: state => {
+      return state.sitLucrari;
     },
     newInvoiceFromDetails: state => {
       return state.newInvoiceFromDetails;
@@ -24,6 +28,9 @@ export const invoices = new Vuex.Store({
   actions: {
     async storeInvoice({ commit }, context, payload) {
       commit("storeInvoice", await InvoiceService.fetchInvoices());
+    },
+    async aSituatieLucrari({ commit }, context, payload) {
+      commit("mSituatieLucrari", await InvoiceService.fetchSituatieLucrari());
     },
     addNewInvoice({ commit }, payload) {
       commit("addNewInvoice", payload);
@@ -38,6 +45,9 @@ export const invoices = new Vuex.Store({
   mutations: {
     storeInvoice: (state, payload) => {
       state.invoices = payload.data;
+    },
+    mSituatieLucrari: (state, payload) => {
+      state.sitLucrari = payload.data;
     },
     addNewInvoice: (state, payload) => {
       state.invoices = [...state.invoices, payload];
