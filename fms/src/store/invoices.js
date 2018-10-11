@@ -35,6 +35,9 @@ export const invoices = new Vuex.Store({
     addNewInvoice({ commit }, payload) {
       commit("addNewInvoice", payload);
     },
+    saveSituatieLucrari({ commit }, payload) {
+      commit("saveSituatieLucrari", payload);
+    },
     editExistingInvoice({ commit }, payload) {
       commit("editExistingInvoice", payload);
     },
@@ -52,6 +55,9 @@ export const invoices = new Vuex.Store({
     addNewInvoice: (state, payload) => {
       state.invoices = [...state.invoices, payload];
       state.newInvoiceFromDetails = false;
+    },
+    saveSituatieLucrari: (state, payload) => {
+      state.sitLucrari = [...state.sitLucrari, payload];
     },
     editExistingInvoice: (state, payload) => {
       // state.invoices = [...state.invoices, payload];

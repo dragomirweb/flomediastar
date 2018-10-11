@@ -1,6 +1,11 @@
 <template>
 <div class="w-100">
-    <h3 class="text-center mb-5">Situatie lucrari nr.{{gSituatieLucrari.length + 1}}/{{dateAzi}}</h3>
+    <b-alert :show="dismissCountDown" dismissible variant="success" @dismissed="dismissCountDown=0" @dismiss-count-down="countDownChanged">
+        <p class="text-center">Situatia a fost salvata ! In  {{dismissCountDown}} secunde o procesez</p>
+        <b-progress variant="warning" :max="dismissSecs" :value="dismissCountDown" height="4px">
+        </b-progress>
+    </b-alert>
+    <h3 class="text-center mb-5">{{situatielucrari.situatie}}</h3>
     <b-form @submit="onSubmit" @reset="onReset" v-if="show">
         <div v-for="produs in situatielucrari.produse" class="mb-2">
             <b-form-group horizontal breakpoint="lg" label="" label-size="lg" label-class="font-weight-bold pt-0" class="mb-0 border-bottom border-secondary">
@@ -23,8 +28,8 @@
     </b-form>
     <div class="d-flex justify-content-end mt-4">
         <div>
-            <h3>Total cantitate: </h3>
-            <h3>Total pret: </h3>
+            <h3>Total cantitate: {{ situatielucrari.totalCantitate }}</h3>
+            <h3>Total pret: {{ situatielucrari.totalPret }}</h3>
         </div>
     </div>
 </div>
@@ -56,16 +61,52 @@ export default {
                 totalPret: 0
             },
             show: true,
-            dateAzi: moment(new Date()).format('DD.M.YYYY')
+            dateAzi: moment(new Date()).format('DD.M.YYYY'),
+            dismissSecs: 10,
+            dismissCountDown: 0,
+            showDismissibleAlert: false
         }
     },
-    created() {},
-    mounted() {},
-    updated() {},
+    created() {
+        this.setSitLucrari();
+    },
+    mounted() {
+        this.setSitLucrari();
+    },
+    updated() {
+        this.getTotals();
+    },
     methods: {
+        ...mapActions({
+            saveSituatieLucrari: 'saveSituatieLucrari'
+        }),
+            countDownChanged (dismissCountDown) {
+      this.dismissCountDown = dismissCountDown
+    },
         onSubmit(evt) {
             evt.preventDefault();
-            alert(JSON.stringify(this.situatielucrari));
+            this.saveSituatieLucrari(this.situatielucrari).then(
+                this.situatielucrari = {
+                    situatie: '',
+                    data: '',
+                    produse: [{
+                        nrcrt: 0,
+                        denumire: '',
+                        cantitatea: 0,
+                        pret: 0
+                    }],
+                    totalCantitate: 0,
+                    totalPret: 0
+                }
+            ).then(
+                this.setSitLucrari()
+            ).then(
+                this.dismissCountDown = this.dismissSecs
+            ).then(
+                setTimeout(() => {
+                    this.$router.replace('/')
+                }, 10000)
+            );
         },
         onReset(evt) {
             evt.preventDefault();
@@ -73,8 +114,8 @@ export default {
             this.situatielucrari.produse = [{
                 nrcrt: 0,
                 denumire: '',
-                cantitatea: Number,
-                pret: Number
+                cantitatea: 0,
+                pret: 0
             }];
             /* Trick to reset/clear native browser form validation state */
             this.show = false;
@@ -87,20 +128,41 @@ export default {
             produse.push({
                 nrcrt: produse.length + 1,
                 denumire: '',
-                cantitatea: Number,
-                pret: Number
+                cantitatea: 0,
+                pret: 0
             });
         },
         stergeProdus() {
             this.situatielucrari.produse.splice(-1, 1);
         },
+        getTotals() {
+            var total = 0;
+            var totalCantitate = 0;
+            var vm = this;
+
+            vm.situatielucrari.produse.forEach(situatie => {
+                let price = parseFloat(situatie.pret).toFixed(2) * parseInt(situatie.cantitatea);
+                total += price;
+                totalCantitate += parseInt(situatie.cantitatea);
+            });
+            vm.situatielucrari.totalCantitate = totalCantitate;
+            vm.situatielucrari.totalPret = total.toFixed(2);
+        },
+        setSitLucrari() {
+            this.situatielucrari.situatie = 'Situatie lucrari nr.' + (this.gSituatieLucrari.length + 1) + '/' + this.dateAzi;
+        }
     },
     computed: {
         ...mapGetters({
             gSituatieLucrari: 'gSituatieLucrari'
         })
     },
-    filters: {}
+    filters: {},
+    watch: {
+        setSitLucrari() {
+            this.situatielucrari.situatie = 'Situatie lucrari nr.' + (this.gSituatieLucrari.length + 1) + '/' + this.dateAzi;
+        }
+    }
 }
 </script>
 
