@@ -29,8 +29,8 @@ export const invoices = new Vuex.Store({
     async storeInvoice({ commit }, context, payload) {
       commit("storeInvoice", await InvoiceService.fetchInvoices());
     },
-    async aSituatieLucrari({ commit }, context, payload) {
-      commit("mSituatieLucrari", await InvoiceService.fetchSituatieLucrari());
+    aSituatieLucrari({ commit }, payload) {
+      commit("mSituatieLucrari", payload);
     },
     addNewInvoice({ commit }, payload) {
       commit("addNewInvoice", payload);
@@ -50,7 +50,7 @@ export const invoices = new Vuex.Store({
       state.invoices = payload.data;
     },
     mSituatieLucrari: (state, payload) => {
-      state.sitLucrari = payload.data;
+      state.sitLucrari = payload;
     },
     addNewInvoice: (state, payload) => {
       state.invoices = [...state.invoices, payload];

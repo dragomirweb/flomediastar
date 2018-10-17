@@ -1,16 +1,23 @@
 <template>
 <div class="w-100">
     <b-alert :show="dismissCountDown" dismissible variant="success" @dismissed="dismissCountDown=0" @dismiss-count-down="countDownChanged">
-        <p class="text-center">Situatia a fost salvata ! In  {{dismissCountDown}} secunde o procesez</p>
+        <p class="text-center">Situatia a fost salvata ! In {{dismissCountDown}} secunde o procesez</p>
         <b-progress variant="warning" :max="dismissSecs" :value="dismissCountDown" height="4px">
         </b-progress>
     </b-alert>
     <h3 class="text-center mb-5">{{situatielucrari.situatie}}</h3>
     <b-form @submit="onSubmit" @reset="onReset" v-if="show">
-        <div v-for="produs in situatielucrari.produse" class="mb-2">
+        
+        <b-form-group horizontal label="Beneficiar" label-class="text-sm-right" class="mb-2">
+            <b-form-input v-model="situatielucrari.beneficiar" type="text" placeholder="Beneficiar" required></b-form-input>
+        </b-form-group>
+        <div v-for="produs in situatielucrari.produse" :key="produs.id" class="mb-2">
             <b-form-group horizontal breakpoint="lg" label="" label-size="lg" label-class="font-weight-bold pt-0" class="mb-0 border-bottom border-secondary">
                 <b-form-group horizontal label="Denumirea" label-class="text-sm-right" class="mb-2">
-                    <b-form-input v-model="produs.denumire" type="text" placeholder="Denumirea produsului" required></b-form-input>
+                    <b-form-input v-model="produs.denumire" type="text" placeholder="Operatiune" required></b-form-input>
+                </b-form-group>
+                <b-form-group horizontal label="UM" label-class="text-sm-right" class="mb-2">
+                    <b-form-input v-model="produs.um" type="text" placeholder="UM" required></b-form-input>
                 </b-form-group>
                 <b-form-group horizontal label="Cantitatea" label-class="text-sm-right" class="mb-2">
                     <b-form-input v-model="produs.cantitatea" placeholder="Cantitatea/buc" type="number"></b-form-input>
@@ -18,7 +25,6 @@
                 <b-form-group horizontal label="Pret unitar" label-class="text-sm-right">
                     <b-form-input v-model="produs.pret" placeholder="Pret unitar(manopera, transport, utilaj, material)" type="number"></b-form-input>
                 </b-form-group>
-            </b-form-group>
             </b-form-group>
         </div>
         <b-button type="submit" variant="outline-success">Salveaza situatia</b-button>
@@ -50,10 +56,12 @@ export default {
         return {
             situatielucrari: {
                 situatie: '',
-                data: '',
+                data: moment(new Date()).format('DD.M.YYYY'),
+                beneficiar: '',
                 produse: [{
                     nrcrt: 0,
                     denumire: '',
+                    um: 'mp',
                     cantitatea: 0,
                     pret: 0
                 }],
@@ -64,14 +72,14 @@ export default {
             dateAzi: moment(new Date()).format('DD.M.YYYY'),
             dismissSecs: 10,
             dismissCountDown: 0,
-            showDismissibleAlert: false
+            showDismissibleAlert: false,
+            situatii: []
         }
     },
     created() {
-        this.setSitLucrari();
     },
     mounted() {
-        this.setSitLucrari();
+        
     },
     updated() {
         this.getTotals();
@@ -80,18 +88,19 @@ export default {
         ...mapActions({
             saveSituatieLucrari: 'saveSituatieLucrari'
         }),
-            countDownChanged (dismissCountDown) {
-      this.dismissCountDown = dismissCountDown
-    },
+        countDownChanged(dismissCountDown) {
+            this.dismissCountDown = dismissCountDown
+        },
         onSubmit(evt) {
             evt.preventDefault();
-            this.saveSituatieLucrari(this.situatielucrari).then(
+            this.saveSituatieLucrari({situatielucrari: this.situatielucrari}).then(
                 this.situatielucrari = {
                     situatie: '',
                     data: '',
                     produse: [{
                         nrcrt: 0,
                         denumire: '',
+                        um: '',
                         cantitatea: 0,
                         pret: 0
                     }],
@@ -102,10 +111,6 @@ export default {
                 this.setSitLucrari()
             ).then(
                 this.dismissCountDown = this.dismissSecs
-            ).then(
-                setTimeout(() => {
-                    this.$router.replace('/')
-                }, 10000)
             );
         },
         onReset(evt) {
@@ -128,6 +133,7 @@ export default {
             produse.push({
                 nrcrt: produse.length + 1,
                 denumire: '',
+                um: 'mp',
                 cantitatea: 0,
                 pret: 0
             });
@@ -149,7 +155,10 @@ export default {
             vm.situatielucrari.totalPret = total.toFixed(2);
         },
         setSitLucrari() {
-            this.situatielucrari.situatie = 'Situatie lucrari nr.' + (this.gSituatieLucrari.length + 1) + '/' + this.dateAzi;
+            this.situatielucrari.situatie = 'Situatie lucrari nr.' + (this.situatii.length + 1) + '/' + this.dateAzi;
+        },
+        test(){
+            
         }
     },
     computed: {
@@ -159,8 +168,9 @@ export default {
     },
     filters: {},
     watch: {
-        setSitLucrari() {
-            this.situatielucrari.situatie = 'Situatie lucrari nr.' + (this.gSituatieLucrari.length + 1) + '/' + this.dateAzi;
+        gSituatieLucrari(data) {
+            this.situatii = data;
+            this.setSitLucrari();
         }
     }
 }

@@ -7,6 +7,7 @@
                 <generate-situatie></generate-situatie>
             </b-tab>
             <b-tab title="Lista" :title-link-class="linkClass(1)">
+                <situatie-list></situatie-list>
             </b-tab>
         </b-tabs>
     </div>
@@ -16,31 +17,52 @@
 <script>
 import InvoiceService from '@/services/InvoiceService'
 import GenerateSituatie from '@/components/GenerateSituatie'
+import SituatieList from '@/components/SituatieList'
+import { mapActions } from 'vuex';
 
 export default {
     name: 'sitLucrari',
     components: {
-        "GenerateSituatie": GenerateSituatie
+        "GenerateSituatie": GenerateSituatie,
+        "SituatieList": SituatieList
+
     },
     data() {
         return {
-            tabIndex: 0
+            tabIndex: 0,
+            situatii: []
         }
     },
-    mounted() {},
+    mounted() {
+        this.getApiSituatie()
+    },
+    created() {
+        
+    },
     methods: {
+        ...mapActions({
+            aSituatieLucrari: 'aSituatieLucrari'
+        }),
         linkClass(idx) {
             if (this.tabIndex === idx) {
                 return ['bg-light', 'color-dark']
             } else {
                 return ['bg-light', 'color-dark']
             }
+        },
+        async getApiSituatie() {
+           const r = await InvoiceService.fetchSituatieLucrari();
+           this.situatii = r.data;
+           if(r.status == 200){
+               this.aSituatieLucrari(r.data)
+           }
+           
         }
     }
 }
 </script>
 
-<style scoped>
+<style>
 .color-dark {
     color: #343a40 !important;
 }

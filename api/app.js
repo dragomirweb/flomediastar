@@ -48,9 +48,11 @@ for (let index = 0; index < 40; index++) {
       situatielucrari: {
         situatie: 'Situatie lucrari nr. ' + index + '/' + moment(new Date()).format('D-M-YYYY'),
         data: moment(new Date()).format('D-M-YYYY'),
+        beneficiar: 'Beneficiar ' + index,
         produse: [{
             nrcrt: 0,
             denumire: '',
+            um: '',
             cantitatea: 0,
             pret: 0
         }],

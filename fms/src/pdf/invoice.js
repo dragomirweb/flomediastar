@@ -331,3 +331,54 @@ export const chitanta = function(data) {
       ".pdf"
   );
 };
+
+export const pdfSituations = function(data) {
+  var doc = new jsPDF("p", "pt");
+  var data = data.situatielucrari;
+  var productColumns = [
+    "Nr Crt",
+    "Operatiune",
+    "UM",
+    "Cantitate",
+    "Pret unitar [RON]",
+    "Total [RON]"
+  ];
+  var productRows = [];
+  data.produse.forEach((el, index) => {
+    productRows.push([index.toString(), el.denumire, el.cantitatea.toString(), el.pret.toString(), (el.cantitatea * el.pret)]);
+  });
+  doc.autoTable([[""]], [[data.situatie]], {
+    theme: "plain",
+    styles: {
+      cellPadding: 10,
+      fontSize: 20,
+      halign: "center",
+      valign: "center",
+      textColor: [255,0,0]
+    },
+    margin: { top: 5 },
+    showHeader: false
+  });
+  doc.autoTable([[""]], [[data.beneficiar]], {
+    theme: "plain",
+    styles: {
+      cellPadding: 10,
+      fontSize: 16,
+      halign: "center",
+      valign: "center"
+    },
+    margin: { top: 27 },
+    showHeader: false
+  });
+  doc.autoTable(productColumns, productRows, {
+    styles: {  },
+    columnStyles: {
+      id: { fillColor: 220 }
+    },
+    margin: { top: 100 }
+  });
+  doc.save(
+    "test" +
+    ".pdf"
+  );
+};
