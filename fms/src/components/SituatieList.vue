@@ -65,6 +65,7 @@ import _ from 'lodash'
 
 export default {
     name: 'SituatieList',
+    props: ['situatii'],
     components: {
         "Datepicker": Datepicker,
     },
@@ -93,9 +94,6 @@ export default {
         },
         createPdf(data) {
             pdfSituations(data)
-        },
-        test() {
-            this.situations = this.gSituatieLucrari;
         }
     },
     computed: {
@@ -123,6 +121,11 @@ export default {
         }
     },
     watch: {
+        assignSituations() {
+                if(this.situations == []){
+                    console.log('test')
+                }
+        }
     }
 }
 </script>

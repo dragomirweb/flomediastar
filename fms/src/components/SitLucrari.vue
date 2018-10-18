@@ -6,8 +6,8 @@
                 <h2 class="mt-3">Situatie noua</h2>
                 <generate-situatie></generate-situatie>
             </b-tab>
-            <b-tab title="Lista" :title-link-class="linkClass(1)">
-                <situatie-list></situatie-list>
+            <b-tab title="Lista" :title-link-class="linkClass(1)" v-if="situatii.length != 0">
+                <situatie-list v-bind:situatii="situatii"></situatie-list>
             </b-tab>
         </b-tabs>
     </div>

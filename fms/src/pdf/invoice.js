@@ -345,7 +345,8 @@ export const pdfSituations = function(data) {
   ];
   var productRows = [];
   data.produse.forEach((el, index) => {
-    productRows.push([index.toString(), el.denumire, el.cantitatea.toString(), el.pret.toString(), (el.cantitatea * el.pret)]);
+    var totalPrice = el.cantitatea * el.pret;
+    productRows.push([(index + 1).toString(), el.denumire, el.um , el.cantitatea.toString(), el.pret.toString(), totalPrice.toString()]);
   });
   doc.autoTable([[""]], [[data.situatie]], {
     theme: "plain",
@@ -356,7 +357,7 @@ export const pdfSituations = function(data) {
       valign: "center",
       textColor: [255,0,0]
     },
-    margin: { top: 5 },
+    margin: { top: 20 },
     showHeader: false
   });
   doc.autoTable([[""]], [[data.beneficiar]], {
@@ -367,18 +368,48 @@ export const pdfSituations = function(data) {
       halign: "center",
       valign: "center"
     },
-    margin: { top: 27 },
+    margin: { top: 57 },
     showHeader: false
   });
   doc.autoTable(productColumns, productRows, {
-    styles: {  },
+    styles: {
+      halign: "center"
+    },
+    headerStyles: {
+      fillColor: [40,40,40]
+    },
     columnStyles: {
       id: { fillColor: 220 }
     },
-    margin: { top: 100 }
+    margin: { top: 170 }
   });
+  doc.autoTable(["Total cantitate", "Total pret"], [[data.totalCantitate, data.totalPret]], {
+    theme: "grid",
+    styles: {
+      cellPadding: 3,
+      halign: "center",
+      columnWidth: "auto"
+    },
+    headerStyles: {
+      fillColor: [40,40,40]
+    },
+    margin: { top: 600, left: 300 }
+  });
+  doc.autoTable(["Executant,", "Beneficiar,"], [[".........................................", "........................................."]], {
+    theme: "striped",
+    styles: {
+      cellPadding: 10,
+      halign: "center"
+    },
+    headerStyles: {
+      cellPadding: 3,
+      fillColor: [40,40,40]
+    },
+    margin: { top: 650, }
+  });
+  var regex = /(\ )|\./g;
   doc.save(
-    "test" +
+    data.situatie.replace(regex, '-') +
     ".pdf"
   );
 };
