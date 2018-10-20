@@ -133,14 +133,14 @@ export default {
         return {
             factura: {
                 factura: '',
-                firma: '1',
+                firma: '',
                 data: new Date,
-                nrRegCom: '1',
-                cif: '1',
-                sediul: '1',
-                contBancar: '1',
-                banca: '1',
-                sucursala: '1',
+                nrRegCom: '',
+                cif: '',
+                sediul: '',
+                contBancar: '',
+                banca: '',
+                sucursala: '',
                 produse: [{
                     descriere: 'Prestari servicii',
                     unitate: '',
