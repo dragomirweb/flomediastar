@@ -41,7 +41,7 @@
                         >
                           PDF
                         </button>
-                        <button @click="" class="btn btn-sm btn-danger ml-1">Delete</button>
+                        <button @click="deleteSitation(situation)" class="btn btn-sm btn-danger ml-1">Delete</button>
                     </div>
                 </b-list-group-item>
             </b-list-group>
@@ -73,6 +73,7 @@ export default {
         return {
             situations: [],
             searchSituations: '',
+            deleteSituation: Object
         }
     },
     mounted() {
@@ -87,13 +88,17 @@ export default {
     },
     methods: {
         ...mapActions({
-            deleteInv: 'deleteInvoice',
+            deleteStoredSituation: 'deleteStoredSituation',
         }),
         assignSituations() {
            return this.situations = this.gSituatieLucrari;
         },
         createPdf(data) {
             pdfSituations(data)
+        },
+        deleteSitation(situation) {
+            this.deleteSituation = situation;
+            this.deleteStoredSituation(situation);
         }
     },
     computed: {

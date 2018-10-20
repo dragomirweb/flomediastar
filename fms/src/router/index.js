@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Homepage from '@/components/Homepage'
 import Invoice from '@/components/Invoice'
 import SitLucrari from '@/components/SitLucrari'
+import Contract from '@/components/Contract'
 
 Vue.use(Router)
 
@@ -26,6 +27,11 @@ export default new Router({
       path: '/situatie-lucrari',
       name: 'Situatie lucrari',
       component: SitLucrari
+    },
+    {
+      path: '/contract',
+      name: 'Contracte',
+      component: Contract
     }
   ]
 })

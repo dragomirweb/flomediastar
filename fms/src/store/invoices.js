@@ -43,6 +43,9 @@ export const invoices = new Vuex.Store({
     },
     deleteInvoice({ commit }, payload) {
       commit("deleteInvoice", payload);
+    },
+    deleteStoredSituation({ commit }, payload) {
+      commit("deleteSituation", payload);
     }
   },
   mutations: {
@@ -66,6 +69,10 @@ export const invoices = new Vuex.Store({
     deleteInvoice: (state, payload) => {
       const index = state.invoices.indexOf(payload);
       state.invoices.splice(index, 1);
+    },
+    deleteSituation: (state, payload) => {
+      const index = state.sitLucrari.indexOf(payload);
+      state.sitLucrari.splice(index, 1);
     },
   }
 });
