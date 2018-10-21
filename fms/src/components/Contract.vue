@@ -4,9 +4,11 @@
         <b-tabs class="w-100 my-5">
             <b-tab title="Contract nou" class="w-100" :title-link-class="linkClass(0)" active>
                 <h2 class="mt-3">Situatie noua</h2>
-                <button @click="test('test')">Test</button> 
+                <button @click="test(contractTemplate)">Test</button> 
+                <vue-editor v-model="content"></vue-editor>
             </b-tab>
             <b-tab title="Lista contracte" :title-link-class="linkClass(1)" v-if="situatii.length != 0">
+                {{ content }}
             </b-tab>
         </b-tabs>
     </div>
@@ -19,18 +21,22 @@ import { contract } from '../pdf/contract.js'
 import GenerateSituatie from '@/components/GenerateSituatie'
 import SituatieList from '@/components/SituatieList'
 import { mapActions } from 'vuex';
+import { VueEditor } from "vue2-editor";
+import { contractTemplate } from '@/templates/contract.js'
 
 export default {
-    name: 'sitLucrari',
+    name: 'Contract',
     components: {
         "GenerateSituatie": GenerateSituatie,
-        "SituatieList": SituatieList
+        "SituatieList": SituatieList,
+        "VueEditor": VueEditor
 
     },
     data() {
         return {
             tabIndex: 0,
-            situatii: []
+            situatii: [],
+            content: contractTemplate,
         }
     },
     mounted() {
@@ -43,8 +49,8 @@ export default {
         ...mapActions({
             aSituatieLucrari: 'aSituatieLucrari'
         }),
-        test(param) {
-            contract(param)
+        test() {
+            contract(this.content)
         },
         linkClass(idx) {
             if (this.tabIndex === idx) {
