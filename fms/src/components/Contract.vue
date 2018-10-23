@@ -2,13 +2,19 @@
 <div class="container">
     <div class="row">
         <b-tabs class="w-100 my-5">
-            <b-tab title="Contract nou" class="w-100" :title-link-class="linkClass(0)" active>
-                <h2 class="mt-3">Situatie noua</h2>
-                <button @click="test(contractTemplate)">Test</button> 
-                <vue-editor v-model="content"></vue-editor>
+            <b-tab title="Contract nou" class="pr-none w-100" :title-link-class="linkClass(0)" active>
+                <div class="d-flex">
+                    <b-btn class="pr-none my-3 w-auto mr-3" variant="outline-success" block @click="print">Printeaza</b-btn>
+                    <b-btn class="pr-none my-3 w-auto mr-3" variant="outline-danger" block @click="reset">Sterge</b-btn>
+                </div>
+                <vue-editor v-model="contract"></vue-editor>
             </b-tab>
-            <b-tab title="Lista contracte" :title-link-class="linkClass(1)" v-if="situatii.length != 0">
-                {{ content }}
+            <b-tab title="Anexa contract" class="pr-none" :title-link-class="linkClass(1)">
+                <div class="d-flex">
+                    <b-btn class="pr-none my-3 w-auto mr-3" variant="outline-success" block @click="print">Printeaza</b-btn>
+                    <b-btn class="pr-none my-3 w-auto mr-3" variant="outline-danger" block @click="resetAnexa">Sterge</b-btn>
+                </div>
+                <vue-editor v-model="anexa"></vue-editor>
             </b-tab>
         </b-tabs>
     </div>
@@ -16,19 +22,14 @@
 </template>
 
 <script>
-import InvoiceService from '@/services/InvoiceService'
-import { contract } from '../pdf/contract.js'
-import GenerateSituatie from '@/components/GenerateSituatie'
-import SituatieList from '@/components/SituatieList'
 import { mapActions } from 'vuex';
 import { VueEditor } from "vue2-editor";
 import { contractTemplate } from '@/templates/contract.js'
+import { anexaTemplate } from '@/templates/anexa.js'
 
 export default {
     name: 'Contract',
     components: {
-        "GenerateSituatie": GenerateSituatie,
-        "SituatieList": SituatieList,
         "VueEditor": VueEditor
 
     },
@@ -36,11 +37,11 @@ export default {
         return {
             tabIndex: 0,
             situatii: [],
-            content: contractTemplate,
+            contract: contractTemplate,
+            anexa: anexaTemplate
         }
     },
     mounted() {
-        this.getApiSituatie()
     },
     created() {
         
@@ -49,8 +50,14 @@ export default {
         ...mapActions({
             aSituatieLucrari: 'aSituatieLucrari'
         }),
-        test() {
-            contract(this.content)
+        print() {
+            window.print()
+        },
+        reset(){
+            this.contract = contractTemplate;
+        },
+        resetAnexa() {
+            this.anexa = anexaTemplate;
         },
         linkClass(idx) {
             if (this.tabIndex === idx) {
@@ -58,14 +65,6 @@ export default {
             } else {
                 return ['bg-light', 'color-dark']
             }
-        },
-        async getApiSituatie() {
-           const r = await InvoiceService.fetchSituatieLucrari();
-           this.situatii = r.data;
-           if(r.status == 200){
-               this.aSituatieLucrari(r.data)
-           }
-           
         }
     }
 }
@@ -74,5 +73,17 @@ export default {
 <style>
 .color-dark {
     color: #343a40 !important;
+}
+
+@media print {
+ .pr-none, .ql-toolbar, .nav-tabs {
+     display:none;
+ }
+ .ql-snow {
+     border: 0 !important;
+ }
+ .quill-container {
+     width: 100%;
+ }
 }
 </style>
