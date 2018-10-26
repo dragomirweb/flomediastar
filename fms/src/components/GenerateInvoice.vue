@@ -104,14 +104,14 @@
             <div class="h5 mb-0"><span class="text-info h4">Platit:</span> 0</div>
             <div class="h5 "><span class="text-info h4">Total + TVA:</span> {{factura.totalFacturaPlusTva.toFixed(2) | formatT}}</div>
         </div>
-        <div class="d-flex">
-            <div class="d-flex" v-if="factura.totalFactura != 0 && showClientForm == false">
-                <b-btn class="mt-3 w-auto mr-4" variant="outline-primary" block @click="addProduct">Adauga produs</b-btn>
-                <b-btn class="mt-3 w-auto mr-4" variant="outline-danger" block @click="removeLastProduct">Sterge ultimul produs</b-btn>
+        <div class="d-flex flex-column flex-md-row mx-2 mx-md-0">
+            <div class="d-flex justify-content-between" v-if="factura.totalFactura != 0 && showClientForm == false">
+                <b-btn class="mt-3 w-auto mr-md-4" variant="outline-primary" block @click="addProduct">Adauga produs</b-btn>
+                <b-btn class="mt-3 w-auto mr-md-4" variant="outline-danger" block @click="removeLastProduct">Sterge ultimul produs</b-btn>
             </div>
-            <div class="d-flex ml-auto" v-if="!showClientForm">
-                <b-btn v-if="factura.totalFacturaPlusTva != 0" class="mt-3 w-auto mr-4" variant="outline-success" block @click="saveInvoice">Salveaza</b-btn>
-                <b-btn class="mt-3 w-auto mr-4" variant="outline-info" block @click="showClientForm = true">Modifica client</b-btn>
+            <div class="d-flex justify-content-between ml-md-auto" v-if="!showClientForm">
+                <b-btn v-if="factura.totalFacturaPlusTva != 0" class="mt-3 w-auto mr-md-4" variant="outline-success" block @click="saveInvoice">Salveaza</b-btn>
+                <b-btn class="mt-3 w-auto mr-md-4" variant="outline-info" block @click="showClientForm = true">Modifica client</b-btn>
                 <b-btn class="mt-3 w-auto" variant="outline-danger" block @click="resetGenerateInvoice">Renunta</b-btn>
             </div>
         </div>

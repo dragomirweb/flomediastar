@@ -1,16 +1,16 @@
 <template>
 <div>
     <div class="w-100 mt-2">
-        <div class="d-flex mt-4 mb-1" v-if="!newInvoiceFromDetails && !editInvoice">
-            <div class="d-flex w-50 mr-2">
+        <div class="d-flex flex-column flex-md-row mt-4 mb-1" v-if="!newInvoiceFromDetails && !editInvoice">
+            <div class="d-flex w-100 mb-2 mb-md-0 mr-md-2">
                 <b-form-input @click="clearSearch" v-model="searchInvoice" type="text" placeholder="Cauta factura"></b-form-input>
             </div>
-            <div class="w-25 d-flex mr-2">
+            <div class="w-100 d-flex mb-2 mb-md-0 mr-md-2">
                 <datepicker class="mr-1" :bootstrap-styling="true" @closed="clearSearch" v-model="searchInvoiceByDateStart">
                 </datepicker>
                 <datepicker :bootstrap-styling="true" @closed="clearSearch" v-model="searchInvoiceByDateEnd"></datepicker>
             </div>
-            <div class="w-25 d-flex">
+            <div class="w-100 mb-2 mb-md-0 d-flex">
                 <b-form-select v-model="selected" :options="showInvoices" class="mb-3" />
             </div>
         </div>
@@ -38,20 +38,20 @@
                         {{ invoice.factura.totalFacturaPlusTva}}
                     </span>
                     </div>
-                    <div class="d-flex">
-                        <button @click="facturaNoua(invoice)" class="btn btn-sm btn-info ml-auto">Factura cu datele existente</button>
-                        <button class="btn btn-sm btn-success ml-1"
+                    <div class="d-flex flex-column flex-md-row mt-3 mt-md-0">
+                        <button @click="facturaNoua(invoice)" class="btn btn-sm btn-info mb-2 mb-md-0 ml-md-auto">Factura cu datele existente</button>
+                        <button class="btn btn-sm btn-success mb-2 mb-md-0 ml-md-1"
                           @click="createPDF(invoice)"
                         >
                           PDF
                         </button>
-                        <button class="btn btn-sm btn-success ml-1"
+                        <button class="btn btn-sm btn-success mb-2 mb-md-0 ml-md-1"
                           @click="createChitanta(invoice)"
                         >
                           Chitanta
                         </button>
-                        <button @click="editeazaFactura(invoice)" class="btn btn-sm btn-info ml-1">Edit</button>
-                        <button @click="deleteInvoiceModalShow(invoice)" class="btn btn-sm btn-danger ml-1">Delete</button>
+                        <button @click="editeazaFactura(invoice)" class="btn btn-sm btn-info mb-2 mb-md-0 ml-md-1">Edit</button>
+                        <button @click="deleteInvoiceModalShow(invoice)" class="btn btn-sm btn-danger mb-2 mb-md-0 ml-md-1">Delete</button>
                     </div>
                 </b-list-group-item>
             </b-list-group>

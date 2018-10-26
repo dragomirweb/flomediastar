@@ -1,14 +1,22 @@
 <template>
 <b-navbar class="header-nav" toggleable="md" type="default" variant="dark">
 
-  <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
+  <b-navbar-toggle target="nav_collapse">
+    <div class="d-flex flex-column">
+      <div style="width: 30px; height:3px;background-color:white;margin-bottom:5px;"></div>
+      <div style="width: 30px; height:3px;background-color:white;margin-bottom:5px;"></div>
+      <div style="width: 30px; height:3px;background-color:white;margin-bottom:5px;"></div>
+      <div style="width: 30px; height:3px;background-color:white;margin-bottom:5px;"></div>
+    </div>
+
+  </b-navbar-toggle>
 
   <b-navbar-brand class="logo text-uppercase" href="/">Flomediastar</b-navbar-brand>
 
   <b-collapse is-nav id="nav_collapse">
 
     <b-navbar-nav class="ml-auto">
-      <li class="nav-link" v-for="route in routes"> 
+      <li class="nav-link text-center" v-for="route in routes"> 
         <router-link :to="route.path">{{ route.name }}</router-link>
       </li>
     </b-navbar-nav>
@@ -59,7 +67,7 @@ export default {
     font-size: 1.2rem;
     text-decoration: none;
     color: rgba(255, 255, 255, 1);
-
+    
     &:hover {
       color: rgba(255, 255, 255, 0.8);
     }

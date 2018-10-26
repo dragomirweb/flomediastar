@@ -2,7 +2,7 @@
 <div>
     <div class="container">
         <div class="row">
-            <b-tabs class="w-100 mt-5">
+            <b-tabs class="w-100 mt-5 p-2 p-sm-0">
                 <b-tab title="Factura noua" :title-link-class="linkClass(0)" active>
                     <invoice-statistics />
                     <generate-invoice />
