@@ -1,9 +1,8 @@
 <template>
 <div class="container">
     <div class="row">
-        <b-tabs class="w-100 my-5">
+        <b-tabs class="col-12 w-100 my-5">
             <b-tab title="Situatie noua" class="w-100" :title-link-class="linkClass(0)" active>
-                <h2 class="mt-3">Situatie noua</h2>
                 <generate-situatie></generate-situatie>
             </b-tab>
             <b-tab title="Lista" :title-link-class="linkClass(1)" v-if="situatii.length != 0">

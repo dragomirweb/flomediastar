@@ -3,14 +3,14 @@
     <div class="row">
         <b-tabs class="w-100 my-5">
             <b-tab title="Contract nou" class="pr-none w-100" :title-link-class="linkClass(0)" active>
-                <div class="d-flex">
+                <div class="d-flex justify-content-center justify-content-md-start justify-content-lg-start">
                     <b-btn class="pr-none my-3 w-auto mr-3" variant="outline-success" block @click="print">Printeaza</b-btn>
                     <b-btn class="pr-none my-3 w-auto mr-3" variant="outline-danger" block @click="reset">Sterge</b-btn>
                 </div>
                 <vue-editor v-model="contract"></vue-editor>
             </b-tab>
             <b-tab title="Anexa contract" class="pr-none" :title-link-class="linkClass(1)">
-                <div class="d-flex">
+                <div class="d-flex justify-content-center justify-content-md-start justify-content-lg-start">
                     <b-btn class="pr-none my-3 w-auto mr-3" variant="outline-success" block @click="print">Printeaza</b-btn>
                     <b-btn class="pr-none my-3 w-auto mr-3" variant="outline-danger" block @click="resetAnexa">Sterge</b-btn>
                 </div>

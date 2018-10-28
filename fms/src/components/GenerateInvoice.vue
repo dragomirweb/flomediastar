@@ -123,7 +123,7 @@
 import {
     mapGetters,
     mapActions,
-mapMutations
+    mapMutations
 } from 'vuex'
 
 export default {
@@ -155,12 +155,11 @@ export default {
             showClientForm: true
         }
     },
-    created() {
-    },
+    created() {},
     mounted() {
         if (this.invAction === 'newInvoice') {
             this.generateNewInvoiceWithData;
-        } else if (this.invAction === 'editInvoice'){
+        } else if (this.invAction === 'editInvoice') {
             this.editCurrentInvoice;
         }
     },
@@ -234,21 +233,52 @@ export default {
             vm.factura.totalFacturaTva = vm.factura.totalFactura * 0.19;
             vm.factura.totalFacturaPlusTva = vm.factura.totalFactura + vm.factura.totalFacturaTva;
         },
-        saveInvoice(){
-            if(this.invAction === 'newInvoice'){
-                this.factura.factura = 'factura-' + this.getInvoices.length;
-                this.addNewInvoice({factura: this.factura})
-            } else if(this.invAction === 'editInvoice'){
+        saveInvoice() {
+            if (this.invAction === 'newInvoice') {
+                this.factura.factura = 'factura-' + (this.getInvoices.length + 1);
+                this.addNewInvoice({
+                    factura: this.factura
+                })
+            } else if (this.invAction === 'editInvoice') {
                 this.$store.state.editInvoice = false;
                 this.editExistingInvoice();
             } else {
-                this.addNewInvoice({factura: this.factura})
+                this.factura.factura = 'factura-' + (this.getInvoices.length + 1);
+                this.addNewInvoice({
+                    factura: this.factura
+                }).then(
+                    this.factura = {
+                        factura: '',
+                        firma: '',
+                        data: new Date,
+                        nrRegCom: '',
+                        cif: '',
+                        sediul: '',
+                        contBancar: '',
+                        banca: '',
+                        sucursala: '',
+                        produse: [{
+                            descriere: 'Prestari servicii',
+                            unitate: '',
+                            pret: 0,
+                            cantitatea: 0,
+                            valoarea: 0
+                        }],
+                        totalFactura: 0,
+                        totalFacturaTva: 0,
+                        totalFacturaPlusTva: 0
+                    }
+                ).then(
+                    setTimeout(() => {
+                        this.showClientForm = true
+                    }, 1500)
+                )
             }
         },
-        resetGenerateInvoice(){
-            if(this.invAction === 'newInvoice'){
+        resetGenerateInvoice() {
+            if (this.invAction === 'newInvoice') {
                 this.$store.state.newInvoiceFromDetails = false;
-            } else if(this.invAction === 'editInvoice'){
+            } else if (this.invAction === 'editInvoice') {
                 this.$store.state.editInvoice = false;
             } else {
                 this.showClientForm = true;
@@ -260,7 +290,7 @@ export default {
         ...mapGetters({
             getInvoices: 'getInvoices',
         }),
-        generateNewInvoiceWithData(){
+        generateNewInvoiceWithData() {
             const data = this.newFactura.factura;
             let newData = this.factura;
 
@@ -270,7 +300,7 @@ export default {
                 }
             };
         },
-        editCurrentInvoice(){
+        editCurrentInvoice() {
             const data = this.editInvoice.factura;
             this.factura = data;
         }
