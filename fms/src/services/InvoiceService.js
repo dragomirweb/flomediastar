@@ -6,5 +6,8 @@ export default {
     },
     fetchSituatieLucrari () {
       return Api().get('situatie-lucrari')
+    },
+    saveInvoice(payload) {
+      return Api().post('invoice', payload)
     }
   }

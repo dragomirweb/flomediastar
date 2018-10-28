@@ -7,7 +7,7 @@
     </b-alert>
     <h3 class="text-center mb-5">{{situatielucrari.situatie}}</h3>
     <b-form @submit="onSubmit" @reset="onReset" v-if="show">
-        
+
         <b-form-group horizontal label="Beneficiar" label-class="text-sm-right" class="mb-2">
             <b-form-input v-model="situatielucrari.beneficiar" type="text" placeholder="Beneficiar" required></b-form-input>
         </b-form-group>
@@ -27,15 +27,17 @@
                 </b-form-group>
             </b-form-group>
         </div>
-        <b-button type="submit" variant="outline-success">Salveaza situatia</b-button>
-        <b-button type="reset" variant="outline-danger">Sterge situatia</b-button>
-        <b-button @click="adaugaProdus" variant="outline-primary">Adauga produs</b-button>
-        <b-button @click="stergeProdus" variant="outline-danger">Sterge produs</b-button>
+        <div class="d-flex flex-column flex-md-row">
+            <b-button type="submit" variant="outline-success" class="mb-2 mb-md-0 mr-md-2 order-2">Salveaza situatia</b-button>
+            <b-button type="reset" variant="outline-danger" class="mb-2 mb-md-0 mr-md-2 order-3">Sterge situatia</b-button>
+            <b-button @click="adaugaProdus" variant="outline-primary" class="mb-2 mb-md-0 mr-md-2 order-0">Adauga produs</b-button>
+            <b-button @click="stergeProdus" variant="outline-danger" class="mb-2 mb-md-0 mr-md-2 order-1">Sterge produs</b-button>
+        </div>
     </b-form>
     <div class="d-flex justify-content-end mt-4">
-        <div>
-            <h3>Total cantitate: {{ situatielucrari.totalCantitate }}</h3>
-            <h3>Total pret: {{ situatielucrari.totalPret }}</h3>
+        <div class="col-12 col-md-4 p-3 border border-info">
+            <h3 class="m-0 text-right">Total cantitate: {{ situatielucrari.totalCantitate }}</h3>
+            <h3 class="m-0 text-right">Total pret: {{ situatielucrari.totalPret }}</h3>
         </div>
     </div>
 </div>
@@ -76,10 +78,9 @@ export default {
             situatii: []
         }
     },
-    created() {
-    },
+    created() {},
     mounted() {
-        
+
     },
     updated() {
         this.getTotals();
@@ -93,7 +94,9 @@ export default {
         },
         onSubmit(evt) {
             evt.preventDefault();
-            this.saveSituatieLucrari({situatielucrari: this.situatielucrari}).then(
+            this.saveSituatieLucrari({
+                situatielucrari: this.situatielucrari
+            }).then(
                 this.situatielucrari = {
                     situatie: '',
                     data: '',
@@ -157,8 +160,8 @@ export default {
         setSitLucrari() {
             this.situatielucrari.situatie = 'Situatie lucrari nr.' + (this.situatii.length + 1) + '/' + this.dateAzi;
         },
-        test(){
-            
+        test() {
+
         }
     },
     computed: {
@@ -177,5 +180,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
+.shadow {
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+}
 </style>

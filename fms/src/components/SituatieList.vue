@@ -126,11 +126,7 @@ export default {
         }
     },
     watch: {
-        assignSituations() {
-                if(this.situations == []){
-                    console.log('test')
-                }
-        }
+
     }
 }
 </script>

@@ -26,8 +26,8 @@ export const invoices = new Vuex.Store({
     }
   },
   actions: {
-    async storeInvoice({ commit }, context, payload) {
-      commit("storeInvoice", await InvoiceService.fetchInvoices());
+    aInvoices({ commit }, payload) {
+      commit("mInvoices", payload);
     },
     aSituatieLucrari({ commit }, payload) {
       commit("mSituatieLucrari", payload);
@@ -49,30 +49,37 @@ export const invoices = new Vuex.Store({
     }
   },
   mutations: {
-    storeInvoice: (state, payload) => {
-      state.invoices = payload.data;
-    },
     mSituatieLucrari: (state, payload) => {
       state.sitLucrari = payload;
+    },
+    mInvoices: (state, payload) => {
+      state.invoices = payload;
     },
     addNewInvoice: (state, payload) => {
       state.invoices = [...state.invoices, payload];
       state.newInvoiceFromDetails = false;
+      //TODO: Save invoice in database
+      InvoiceService.saveInvoice(payload);
     },
     saveSituatieLucrari: (state, payload) => {
+      //TODO: Save situatie to db
+      
       state.sitLucrari = [...state.sitLucrari, payload];
     },
     editExistingInvoice: (state, payload) => {
       // state.invoices = [...state.invoices, payload];
+      //TODO: Update database
       console.log('edited an invoice')
     },
     deleteInvoice: (state, payload) => {
       const index = state.invoices.indexOf(payload);
       state.invoices.splice(index, 1);
+      //TODO: delete db invoice
     },
     deleteSituation: (state, payload) => {
       const index = state.sitLucrari.indexOf(payload);
       state.sitLucrari.splice(index, 1);
+      //TODO: Delete situation from db
     },
   }
 });
