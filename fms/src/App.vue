@@ -21,16 +21,10 @@ export default {
         }
     },
     created() {
-        this.$store.dispatch("storeInvoice"),
-        this.$store.dispatch("aSituatieLucrari")
     },
     mounted () {
     },
     methods: {
-        ...mapActions([
-            'storeInvoice',
-            'aSituatieLucrari'
-        ]) 
     }
 }
 </script>
