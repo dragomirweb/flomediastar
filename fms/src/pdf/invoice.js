@@ -49,7 +49,7 @@ export const pdf = function(data) {
     {
       theme: "plain",
       styles: {
-        cellPadding: 1,
+        cellPadding: 0,
         fontSize: 8,
       },
       margin: { top: 70 },
@@ -87,7 +87,7 @@ export const pdf = function(data) {
     {
       theme: "plain",
       styles: {
-        cellPadding: 1
+        cellPadding: 0
       },
       margin: { top: 198 },
       showHeader: false,
@@ -118,15 +118,19 @@ export const pdf = function(data) {
     columnStyles: {
       id: { fillColor: 255 }
     },
+    headerStyles: {
+      cellPadding: 3,
+      fillColor: [40,40,40]
+    },
     margin: { top: 350 }
   });
   doc.autoTable(
     [[""]],
     [
-      ["TVA 19%:  " + 'RON ' + inv.totalFacturaTva.toFixed(2)],
-      ["Total:  " + inv.totalFactura.toFixed(2)],
-      ["Platit:  RON 0,00"],
-      ["Total + TVA:  " + 'RON ' + inv.totalFacturaPlusTva.toFixed(2)]
+      ["TVA 19%:          " + 'RON ' + inv.totalFacturaTva.toFixed(2)],
+      ["Total:                 " + 'RON ' + inv.totalFactura.toFixed(2)],
+      ["Platit:                 RON 0,00"],
+      ["Total + TVA:      " + 'RON ' + inv.totalFacturaPlusTva.toFixed(2)]
     ],
     {
       theme: "striped",
@@ -134,9 +138,9 @@ export const pdf = function(data) {
         cellPadding: 1,
         fontSize: 10
       },
-      margin: { left: 405, top: 550 },
+      margin: { left: 380, top: 550 },
       showHeader: false,
-      tableWidth: 150
+      tableWidth: 175
     }
   );
   doc.save(
@@ -238,6 +242,10 @@ export const chitanta = function(data) {
       fontSize: 10,
       overflow: 'linebreak'
      },
+     headerStyles: {
+      cellPadding: 3,
+      fillColor: [40,40,40]
+    },
     columnStyles: {
       id: { fillColor: 255 }
     },
@@ -315,6 +323,10 @@ export const chitanta = function(data) {
       fontSize: 10,
       overflow: 'linebreak'
      },
+     headerStyles: {
+      cellPadding: 3,
+      fillColor: [40,40,40]
+    },
     columnStyles: {
       id: { fillColor: 255 }
     },
