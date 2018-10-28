@@ -75,7 +75,10 @@ for (let index = 1; index < 40; index++) {
 };
 
 app.get("/invoice", (req, res) => {
-  res.send(data);
+  Invoice.find({}, 'factura', function (error, factura) {
+    if (error) { console.error(error); }
+    res.send(factura)
+  }).sort({_id:-1})
 });
 app.post("/invoice", (req, res) => {
 
@@ -121,6 +124,23 @@ app.post("/invoice", (req, res) => {
     })
   })
 
+});
+
+app.delete("/invoice", (req, res) => {
+  var id = req.query.id;
+  
+  Invoice.remove({_id: id})
+  .exec()
+  .then(result => {
+    res.status(200).json({
+      message: 'deleted'
+    })
+  })
+  .catch(err => {
+    res.status(500).json({
+      error: err
+    })
+  });
 });
 app.get("/situatie-lucrari", (req, res) => {
   res.send(sitLucrari);
