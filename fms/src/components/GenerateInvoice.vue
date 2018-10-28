@@ -152,7 +152,8 @@ export default {
                 totalFacturaTva: 0,
                 totalFacturaPlusTva: 0
             },
-            showClientForm: true
+            showClientForm: true,
+            id: ''
         }
     },
     created() {},
@@ -241,7 +242,10 @@ export default {
                 })
             } else if (this.invAction === 'editInvoice') {
                 this.$store.state.editInvoice = false;
-                this.editExistingInvoice();
+                this.editExistingInvoice({
+                    _id: this.id,
+                    data: this.factura
+                    });
             } else {
                 this.factura.factura = 'factura-' + (this.getInvoices.length + 1);
                 this.addNewInvoice({
@@ -301,6 +305,7 @@ export default {
             };
         },
         editCurrentInvoice() {
+            this.id = this.editInvoice._id;
             const data = this.editInvoice.factura;
             this.factura = data;
         }
