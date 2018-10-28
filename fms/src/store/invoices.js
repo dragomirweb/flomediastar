@@ -58,12 +58,10 @@ export const invoices = new Vuex.Store({
     addNewInvoice: (state, payload) => {
       state.invoices = [...state.invoices, payload];
       state.newInvoiceFromDetails = false;
-      //TODO: Save invoice in database
       InvoiceService.saveInvoice(payload);
     },
     saveSituatieLucrari: (state, payload) => {
       //TODO: Save situatie to db
-      
       state.sitLucrari = [...state.sitLucrari, payload];
     },
     editExistingInvoice: (state, payload) => {
@@ -74,7 +72,7 @@ export const invoices = new Vuex.Store({
     deleteInvoice: (state, payload) => {
       const index = state.invoices.indexOf(payload);
       state.invoices.splice(index, 1);
-      //TODO: delete db invoice
+      InvoiceService.deleteInvoice(payload._id);
     },
     deleteSituation: (state, payload) => {
       const index = state.sitLucrari.indexOf(payload);
