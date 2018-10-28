@@ -9,5 +9,10 @@ export default {
     },
     saveInvoice(payload) {
       return Api().post('invoice', payload)
+    },
+    deleteInvoice(id) {
+      return Api().delete('invoice', {
+        params: { id: id }
+        })
     }
   }
