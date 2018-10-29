@@ -2,14 +2,14 @@
 <div class="container">
     <div class="row">
         <b-tabs class="w-100 my-5">
-            <b-tab title="Contract nou" class="pr-none w-100" :title-link-class="linkClass(0)" active>
+            <b-tab title="Contract nou" class="w-100" :title-link-class="linkClass(0)" active>
                 <div class="d-flex justify-content-center justify-content-md-start justify-content-lg-start">
                     <b-btn class="pr-none my-3 w-auto mr-3" variant="outline-success" block @click="print">Printeaza</b-btn>
                     <b-btn class="pr-none my-3 w-auto mr-3" variant="outline-danger" block @click="reset">Sterge</b-btn>
                 </div>
                 <vue-editor v-model="contract"></vue-editor>
             </b-tab>
-            <b-tab title="Anexa contract" class="pr-none" :title-link-class="linkClass(1)">
+            <b-tab title="Anexa contract" :title-link-class="linkClass(1)">
                 <div class="d-flex justify-content-center justify-content-md-start justify-content-lg-start">
                     <b-btn class="pr-none my-3 w-auto mr-3" variant="outline-success" block @click="print">Printeaza</b-btn>
                     <b-btn class="pr-none my-3 w-auto mr-3" variant="outline-danger" block @click="resetAnexa">Sterge</b-btn>
@@ -70,20 +70,23 @@ export default {
 }
 </script>
 
-<style>
+<style >
 .color-dark {
     color: #343a40 !important;
 }
 
 @media print {
- .pr-none, .ql-toolbar, .nav-tabs {
-     display:none;
+ .quillWrapper .ql-snow.ql-toolbar {
+     display: none !important;
  }
- .ql-snow {
-     border: 0 !important;
+ .ql-container.ql-snow {
+     border: none !important;
  }
- .quill-container {
-     width: 100%;
+ .nav-tabs {
+     display: none !important;
+ }
+ .pr-none {
+     display: none !important;
  }
 }
 </style>
