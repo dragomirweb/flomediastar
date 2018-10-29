@@ -5,6 +5,7 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const morgan = require("morgan");
 const moment = require("moment");
+const path = require("path");
 require('dotenv').config();
 var mongoose = require('mongoose');
 const Invoice = require("./models/invoice");
@@ -24,56 +25,7 @@ db.once("open", function(callback){
   console.log("Connection Succeeded");
 });
 
-var data = [];
-var sitLucrari = [];
-
-for (let index = 1; index < 40; index++) {
-  data.push(
-    {
-      factura: {
-        factura: 'factura-' + index,
-        firma: 'client ' + index,
-        data: new Date(),
-        nrRegCom: '1',
-        cif: '1',
-        sediul: '1',
-        contBancar: '1',
-        banca: '1',
-        sucursala: '1',
-        produse: [{
-            descriere: 'Prestari servicii',
-            unitate: '',
-            pret: 0,
-            cantitatea: 0,
-            valoarea: 0
-        }],
-        totalFactura: 0,
-        totalFacturaTva: 0,
-        totalFacturaPlusTva: 0
-      }
-    }
-  );
-};
-for (let index = 1; index < 40; index++) {
-  sitLucrari.push(
-    {
-      situatielucrari: {
-        situatie: 'Situatie lucrari nr. ' + index + '/' + moment(new Date()).format('D-M-YYYY'),
-        data: moment(new Date()).format('D-M-YYYY'),
-        beneficiar: 'Beneficiar ' + index,
-        produse: [{
-            nrcrt: 0,
-            denumire: '',
-            um: '',
-            cantitatea: 0,
-            pret: 0
-        }],
-        totalCantitate: 0,
-        totalPret: 0
-      }
-    }
-  );
-};
+app.use(express.static('public'))
 
 app.get("/invoice", (req, res) => {
   Invoice.find({}, 'factura', function (error, factura) {
@@ -214,5 +166,9 @@ app.delete("/situatie-lucrari", (req, res) => {
     })
   });
 });
+
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname + '/public/index.html'))
+})
 
 app.listen(process.env.PORT || 8081);
