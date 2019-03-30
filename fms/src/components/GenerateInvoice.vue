@@ -1,6 +1,5 @@
 <template>
 <div>
-    <invoice-statistics />
     <div class="w-100 mt-4">
         <h3 v-if="showClientForm">Date Client</h3>
         <h3 v-if="!showClientForm">Date Factura</h3>
@@ -76,8 +75,8 @@
                 <b-form-input id="clientSucursala" type="text" v-model="factura.sucursala" required placeholder="Sucursala">
                 </b-form-input>
             </b-form-group>
-            <b-button type="submit" variant="success">Salveaza</b-button>
-            <b-button type="reset" variant="danger">Reseteaza formular</b-button>
+            <b-button type="submit" variant="outline-success">Adauga produse</b-button>
+            <b-button type="reset" variant="outline-danger">Reseteaza client</b-button>
         </b-form>
         <div class="mt-4" v-if="!showClientForm" v-for="product in factura.produse" :key="product.id">
             <b-form-group horizontal breakpoint="lg" label="" label-size="lg" label-class="font-weight-bold pt-0" class="mb-0 border-bottom border-secondary">
@@ -96,43 +95,52 @@
                 <b-form-group horizontal label="Valoarea:" label-class="text-sm-right" label-for="nestedState">
                     <b-form-input v-model="product.valoarea" disabled type="number"></b-form-input>
                 </b-form-group>
-                
+
             </b-form-group>
         </div>
-        <div class="d-flex flex-column align-items-end justify-content-end my-4 pr-2" v-if="!showClientForm && factura.totalFacturaPlusTva != 0">
+        <div class="d-flex flex-column align-items-end justify-content-end my-4 pr-2 border-bottom border-white" v-if="!showClientForm && factura.totalFacturaPlusTva != 0">
             <div class="h5 mb-0"><span class="text-info h4">Total:</span> {{factura.totalFactura.toFixed(2) | formatT}}</div>
             <div class="h5 mb-0"><span class="text-info h4">TVA 19%:</span> {{factura.totalFacturaTva.toFixed(2) | formatT}}</div>
             <div class="h5 mb-0"><span class="text-info h4">Platit:</span> 0</div>
             <div class="h5 "><span class="text-info h4">Total + TVA:</span> {{factura.totalFacturaPlusTva.toFixed(2) | formatT}}</div>
         </div>
-        <div class="d-flex" v-if="!showClientForm">
-            <b-btn class="mt-3 w-auto mr-4" variant="outline-primary" block @click="addProduct">Adauga produs</b-btn>
-            <b-btn class="mt-3 w-auto mr-4" variant="outline-danger" block @click="removeLastProduct">Sterge ultimul produs</b-btn>
-            <b-btn class="mt-3 w-auto" variant="outline-info" block @click="showClientForm = true">Modifica client</b-btn>
+        <div class="d-flex flex-column flex-md-row mx-2 mx-md-0">
+            <div class="d-flex justify-content-between" v-if="factura.totalFactura != 0 && showClientForm == false">
+                <b-btn class="mt-3 w-auto mr-md-4" variant="outline-primary" block @click="addProduct">Adauga produs</b-btn>
+                <b-btn class="mt-3 w-auto mr-md-4" variant="outline-danger" block @click="removeLastProduct">Sterge ultimul produs</b-btn>
+            </div>
+            <div class="d-flex justify-content-between ml-md-auto" v-if="!showClientForm">
+                <b-btn v-if="factura.totalFacturaPlusTva != 0" class="mt-3 w-auto mr-md-4" variant="outline-success" block @click="saveInvoice">Salveaza</b-btn>
+                <b-btn class="mt-3 w-auto mr-md-4" variant="outline-info" block @click="showClientForm = true">Modifica client</b-btn>
+                <b-btn class="mt-3 w-auto" variant="outline-danger" block @click="resetGenerateInvoice">Renunta</b-btn>
+            </div>
         </div>
     </div>
 </div>
 </template>
 
 <script>
-import InvoiceStatistics from '@/components/InvoiceStatistics'
-import { mapGetters, mapActions } from 'vuex'
+import {
+    mapGetters,
+    mapActions,
+    mapMutations
+} from 'vuex'
 
 export default {
     name: 'GenerateInvoice',
-    components: {
-        "InvoiceStatistics": InvoiceStatistics
-    },
+    props: ['newFactura', 'invAction', 'editInvoice'],
     data() {
         return {
             factura: {
-                firma: '1',
-                nrRegCom: '1',
-                cif: '1',
-                sediul: '1',
-                contBancar: '1',
-                banca: '1',
-                sucursala: '1',
+                factura: '',
+                firma: '',
+                data: new Date,
+                nrRegCom: '',
+                cif: '',
+                sediul: '',
+                contBancar: '',
+                banca: '',
+                sucursala: '',
                 produse: [{
                     descriere: 'Prestari servicii',
                     unitate: '',
@@ -144,20 +152,27 @@ export default {
                 totalFacturaTva: 0,
                 totalFacturaPlusTva: 0
             },
-            showClientForm: true
+            showClientForm: true,
+            id: ''
         }
     },
-    created() {
-        this.$store.dispatch("storeInvoice")
+    created() {},
+    mounted() {
+        if (this.invAction === 'newInvoice') {
+            this.generateNewInvoiceWithData;
+        } else if (this.invAction === 'editInvoice') {
+            this.editCurrentInvoice;
+        }
     },
-    updated () {
-        this.test()
+    updated() {
+        this.normalizeProducts()
         this.getTotals()
     },
     methods: {
-        ...mapActions([
-            'storeInvoice'
-        ]),
+        ...mapActions({
+            addNewInvoice: 'addNewInvoice',
+            editExistingInvoice: 'editExistingInvoice'
+        }),
         onSubmit(evt) {
             evt.preventDefault();
             // alert(JSON.stringify(this.form));
@@ -197,17 +212,18 @@ export default {
                 cantitatea: 0,
                 valoarea: 0
             });
-            console.log(this.factura)
         },
         removeLastProduct() {
             this.factura.produse.splice(-1, 1);
         },
-        test() {
+        normalizeProducts() {
             this.factura.produse.forEach(el => {
                 el.valoarea = parseFloat(el.pret) * parseInt(el.cantitatea);
+                el.cantitatea = parseFloat(el.cantitatea);
+                el.pret = parseFloat(el.pret);
             });
         },
-        getTotals(){
+        getTotals() {
             var total = 0;
             var vm = this;
 
@@ -215,16 +231,87 @@ export default {
                 total += el.valoarea;
             });
             vm.factura.totalFactura = parseFloat(total);
-            vm.factura.totalFacturaTva = vm.factura.totalFactura*0.19;
+            vm.factura.totalFacturaTva = vm.factura.totalFactura * 0.19;
             vm.factura.totalFacturaPlusTva = vm.factura.totalFactura + vm.factura.totalFacturaTva;
+        },
+        saveInvoice() {
+            if (this.invAction === 'newInvoice') {
+                this.factura.factura = 'factura-' + (this.getInvoices.length + 1);
+                this.addNewInvoice({
+                    factura: this.factura
+                })
+            } else if (this.invAction === 'editInvoice') {
+                this.$store.state.editInvoice = false;
+                this.editExistingInvoice({
+                    _id: this.id,
+                    data: this.factura
+                    });
+            } else {
+                this.factura.factura = 'factura-' + (this.getInvoices.length + 1);
+                this.addNewInvoice({
+                    factura: this.factura
+                }).then(
+                    this.factura = {
+                        factura: '',
+                        firma: '',
+                        data: new Date,
+                        nrRegCom: '',
+                        cif: '',
+                        sediul: '',
+                        contBancar: '',
+                        banca: '',
+                        sucursala: '',
+                        produse: [{
+                            descriere: 'Prestari servicii',
+                            unitate: '',
+                            pret: 0,
+                            cantitatea: 0,
+                            valoarea: 0
+                        }],
+                        totalFactura: 0,
+                        totalFacturaTva: 0,
+                        totalFacturaPlusTva: 0
+                    }
+                ).then(
+                    setTimeout(() => {
+                        this.showClientForm = true
+                    }, 1500)
+                )
+            }
+        },
+        resetGenerateInvoice() {
+            if (this.invAction === 'newInvoice') {
+                this.$store.state.newInvoiceFromDetails = false;
+            } else if (this.invAction === 'editInvoice') {
+                this.$store.state.editInvoice = false;
+            } else {
+                this.showClientForm = true;
+            }
+
         }
     },
     computed: {
-        
-        
+        ...mapGetters({
+            getInvoices: 'getInvoices',
+        }),
+        generateNewInvoiceWithData() {
+            const data = this.newFactura.factura;
+            let newData = this.factura;
+
+            for (var key in data) {
+                if (data.hasOwnProperty(key)) {
+                    newData[key] = data[key]
+                }
+            };
+        },
+        editCurrentInvoice() {
+            this.id = this.editInvoice._id;
+            const data = this.editInvoice.factura;
+            this.factura = data;
+        }
     },
     filters: {
-        formatT(val){
+        formatT(val) {
             return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         }
     }

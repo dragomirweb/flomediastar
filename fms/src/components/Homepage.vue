@@ -2,7 +2,7 @@
  <b-container >
   <b-row>
     <b-col cols="12">
-      <div class="time">
+      <div class="time my-4">
         Data: {{ new Date() | moment("Do MMMM YYYY, h:mm:ss a") }}
       </div>
     </b-col>
@@ -12,6 +12,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
+import moment from 'moment'
 
 export default {
   name: 'Homepage',
@@ -20,6 +21,11 @@ export default {
     }
   },
   computed: {
+  },
+  mounted() {
+  },
+  methods: {
+    
   }
 }
 </script>
@@ -28,7 +34,6 @@ export default {
 <style scoped>
 .time {
   font-size: 1.3rem;
-  padding: 1.5rem;
 }
 h1, h2 {
   font-weight: normal;

@@ -2,7 +2,8 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Homepage from '@/components/Homepage'
 import Invoice from '@/components/Invoice'
-import Chitanta from '@/components/Chitanta'
+import SitLucrari from '@/components/SitLucrari'
+import Contract from '@/components/Contract'
 
 Vue.use(Router)
 
@@ -23,9 +24,14 @@ export default new Router({
       component: Invoice
     },
     {
-      path: '/chitanta',
-      name: 'Chitanta',
-      component: Chitanta
+      path: '/situatie-lucrari',
+      name: 'Situatie lucrari',
+      component: SitLucrari
+    },
+    {
+      path: '/contract',
+      name: 'Contracte',
+      component: Contract
     }
   ]
 })

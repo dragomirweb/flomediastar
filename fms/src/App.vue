@@ -21,14 +21,10 @@ export default {
         }
     },
     created() {
-        this.$store.dispatch("storeInvoice")
     },
     mounted () {
     },
     methods: {
-        ...mapActions([
-            'storeInvoice'
-        ]) 
     }
 }
 </script>
