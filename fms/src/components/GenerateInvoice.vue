@@ -46,6 +46,13 @@
                 </div>
             </div>
         </b-modal>
+        <div v-if="showClientForm">
+            
+            <div class="w-100 d-flex my-4 align-items-center">
+                <span class="mr-2">Selecteaza data : </span><Datepicker class="mr-1" :bootstrap-styling="true" v-model="userDate">
+                </Datepicker>
+            </div>
+        </div>
         <b-form @submit="onSubmit" @reset="onReset" v-if="showClientForm">
             <b-form-group label="Firma/nume facturata:" label-for="clientFirma" class="mb-1">
                 <b-form-input id="clientFirma" type="text" v-model="factura.firma" required placeholder="Firma/Nume">
@@ -126,9 +133,14 @@ import {
     mapMutations
 } from 'vuex'
 
+import Datepicker from 'vuejs-datepicker';
+
 export default {
     name: 'GenerateInvoice',
     props: ['newFactura', 'invAction', 'editInvoice'],
+    components: {
+        "Datepicker": Datepicker,
+    },
     data() {
         return {
             factura: {
@@ -153,7 +165,9 @@ export default {
                 totalFacturaPlusTva: 0
             },
             showClientForm: true,
-            id: ''
+            id: '',
+            userDate: new Date(),
+            dateSelected: false,
         }
     },
     created() {},
@@ -222,6 +236,7 @@ export default {
                 el.cantitatea = parseFloat(el.cantitatea);
                 el.pret = parseFloat(el.pret);
             });
+            this.factura.data = this.userDate;
         },
         getTotals() {
             var total = 0;

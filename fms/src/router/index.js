@@ -8,8 +8,7 @@ import Contract from '@/components/Contract'
 Vue.use(Router)
 
 export default new Router({
-  hashbang: false,
-  mode: "history",
+  hashbang: true,
   linkActiveClass: "active",
   transitionOnLoad: true,
   routes: [
