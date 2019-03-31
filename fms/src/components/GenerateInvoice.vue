@@ -236,6 +236,7 @@ export default {
                 el.cantitatea = parseFloat(el.cantitatea);
                 el.pret = parseFloat(el.pret);
             });
+            this.factura.data = this.userDate;
         },
         getTotals() {
             var total = 0;
@@ -317,13 +318,11 @@ export default {
                     newData[key] = data[key]
                 }
             };
-            this.factura.data = this.userDate;
         },
         editCurrentInvoice() {
             this.id = this.editInvoice._id;
             const data = this.editInvoice.factura;
             this.factura = data;
-            this.factura.data = this.userDate;
         }
     },
     filters: {
