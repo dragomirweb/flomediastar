@@ -25,7 +25,7 @@ db.once("open", function(callback){
   console.log("Connection Succeeded");
 });
 
-app.use(express.static('public'))
+app.use(express.static('./public/'));
 
 app.get("/invoice", (req, res) => {
   Invoice.find({}, 'factura', function (error, factura) {
@@ -169,6 +169,6 @@ app.delete("/situatie-lucrari", (req, res) => {
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname + '/public/index.html'))
-})
+});
 
 app.listen(process.env.PORT || 8081);
