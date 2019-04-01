@@ -181,6 +181,7 @@ export default {
     updated() {
         this.normalizeProducts()
         this.getTotals()
+        
     },
     methods: {
         ...mapActions({
@@ -254,13 +255,16 @@ export default {
                 this.factura.factura = 'factura-' + (this.getInvoices.length + 1);
                 this.addNewInvoice({
                     factura: this.factura
-                })
+                });
+                this.$router.go()
+                
             } else if (this.invAction === 'editInvoice') {
                 this.$store.state.editInvoice = false;
                 this.editExistingInvoice({
                     _id: this.id,
                     data: this.factura
                     });
+                    this.$router.go()
             } else {
                 this.factura.factura = 'factura-' + (this.getInvoices.length + 1);
                 this.addNewInvoice({
