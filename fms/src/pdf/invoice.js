@@ -37,7 +37,7 @@ export const pdf = function(data) {
   doc.autoTable(
     [[""]],
     [
-      ["Seria:  FMO"],
+      ["Seria:  FMI"],
       ["Furnizor:  SC FLO MEDIA STAR SRL"],
       ["Nr. R.C /Aut.:  J40/ 14517/15.12.2014"],
       ["C.I.F:  RO33900793"],
