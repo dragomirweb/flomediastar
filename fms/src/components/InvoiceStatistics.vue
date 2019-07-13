@@ -14,10 +14,10 @@
             </h4>
         </div>
         <div class="w-100 border border-info p-3 mr-2">
-            <h4 class="py-3 h6 mb-0">Data: <span class="text-info font-weight-bold">{{ new Date() | moment("D-M-YYYY") }}</span></h4>
+            <h4 class="py-3 h6 mb-0">Factura emisa la:<br ><span class="text-info font-weight-bold">{{ lastDate | moment("D-M-YYYY") }}</span></h4>
         </div>
         <div class="w-100 border border-info p-3">
-            <h4 class="py-3 h6 mb-0">Ultimul client: <span class="text-info font-weight-bold text-uppercase">{{ lastClient }}</span></h4>
+            <h4 class="py-3 h6 mb-0">Ultimul client: <br ><span class="text-info font-weight-bold text-uppercase">{{ lastClient }}</span></h4>
         </div>
     </div>
     
@@ -53,12 +53,22 @@ export default {
         }),
         lastInvoice() {
             if (this.invoices.length !== 0) {
-                return this.invoices[this.invoices.length - 1].factura.factura;
+                let invoices = this.invoices;
+                // return this.invoices[this.invoices.length - 1].factura.factura;
+                return invoices[0].factura.factura
             }
         },
         lastClient() {
             if (this.invoices.length !== 0) {
-                return this.invoices[this.invoices.length - 1].factura.firma;
+                let invoices = this.invoices;
+                return invoices[0].factura.firma;
+            }
+        },
+        lastDate() {
+
+            if (this.invoices.length !== 0) {
+                let invoices = this.invoices;
+                return invoices[0].factura.data;
             }
         }
     },
