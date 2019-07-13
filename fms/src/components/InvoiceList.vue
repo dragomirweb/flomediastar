@@ -29,13 +29,13 @@
                     <div>
                         <span class="mr-2 text-grey">
                         <b>Total: </b>
-                        {{ invoice.factura.totalFactura}}
+                        {{ baseNum(invoice.factura.totalFactura) }}
                     </span>
                     </div>
                     <div>
                         <span class="mr-2 text-grey">
                         <b>Total + TVA: </b>
-                        {{ invoice.factura.totalFacturaPlusTva}}
+                        {{ baseNum(invoice.factura.totalFacturaPlusTva) }}
                     </span>
                     </div>
                     <div class="d-flex flex-column flex-md-row mt-3 mt-md-0">
@@ -136,6 +136,9 @@ export default {
         }),
         assignInvoices() {
            return this.invoices = this.getInvoices;
+        },
+        baseNum(num) {
+            return parseFloat(num).toFixed(2);
         },
         createPDF(data) {
             pdf(data)

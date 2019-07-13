@@ -4,6 +4,11 @@ import moment from "moment";
 
 export const pdf = function(data) {
   var doc = new jsPDF("p", "pt");
+
+  let baseNum = num => {
+    return parseFloat(num).toFixed(2);
+  };
+
   var productColumns = [
     "Denumirea produselor sau a serviciilor",
     "U.M.",
@@ -99,7 +104,7 @@ export const pdf = function(data) {
     [
       ["Factura Nr:  " + inv.factura.split("-").pop()],
       ["Data:  " + moment(inv.data).format("D-M-YYYY")],
-      ["Total:  " + inv.totalFactura]
+      ["Total:  " + baseNum(inv.totalFactura)]
     ],
     {
       theme: "striped",
