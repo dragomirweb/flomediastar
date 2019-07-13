@@ -21,7 +21,7 @@ export const pdf = function(data) {
     if (um == "") {
       um = "buc";
     }
-    productRows.push([el.descriere, um, 'RON ' + el.pret.toFixed(2), el.cantitatea, 'RON ' + el.valoarea.toFixed(2)]);
+    productRows.push([el.descriere, um, 'RON ' + el.pret, el.cantitatea, 'RON ' + el.valoarea]);
   });
   doc.autoTable([[""]], [["FACTURA"]], {
     theme: "plain",
