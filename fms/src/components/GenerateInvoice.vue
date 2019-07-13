@@ -86,7 +86,18 @@
             <b-button type="reset" variant="outline-danger">Reseteaza client</b-button>
         </b-form>
         <div class="mt-4" v-if="!showClientForm" v-for="product in factura.produse" :key="product.id">
+
+
             <b-form-group horizontal breakpoint="lg" label="" label-size="lg" label-class="font-weight-bold pt-0" class="mb-0 border-bottom border-secondary">
+                <b-form-group horizontal label="Fara TVA:" label-class="text-sm-right" class="mb-0">
+                    <b-form-checkbox
+                        class="d-flex"
+                        v-model="product.garantie"
+                        name="checkbox-1"
+                        size="md"
+                        >
+                    </b-form-checkbox>
+                </b-form-group>
                 <b-form-group horizontal label="Produs sau serviciu:" label-class="text-sm-right" class="mb-0">
                     <b-form-input v-model="product.descriere" type="text"></b-form-input>
                 </b-form-group>
@@ -94,30 +105,30 @@
                     <b-form-radio-group v-model="product.unitate" class="mt-2" :options="['buc', 'mp2', 'role']" />
                 </b-form-group>
                 <b-form-group horizontal label="Pret unitar:" label-class="text-sm-right" label-for="nestedCity">
-                    <b-form-input v-model="product.pret" type="number"></b-form-input>
+                    <b-form-input @keyup="calcValue" step="0.01" v-model="product.pret" type="text"></b-form-input>
                 </b-form-group>
                 <b-form-group horizontal label="Cantitatea:" label-class="text-sm-right" label-for="nestedState">
-                    <b-form-input v-model="product.cantitatea" type="number"></b-form-input>
+                    <b-form-input @keyup="calcValue" step="0.01" v-model="product.cantitatea" type="text"></b-form-input>
                 </b-form-group>
                 <b-form-group horizontal label="Valoarea:" label-class="text-sm-right" label-for="nestedState">
-                    <b-form-input v-model="product.valoarea" disabled type="number"></b-form-input>
+                    <b-form-input disabled v-model="product.valoarea" type="number"></b-form-input>
                 </b-form-group>
 
             </b-form-group>
         </div>
-        <div class="d-flex flex-column align-items-end justify-content-end my-4 pr-2 border-bottom border-white" v-if="!showClientForm && factura.totalFacturaPlusTva != 0">
-            <div class="h5 mb-0"><span class="text-info h4">Total:</span> {{factura.totalFactura.toFixed(2) | formatT}}</div>
-            <div class="h5 mb-0"><span class="text-info h4">TVA 19%:</span> {{factura.totalFacturaTva.toFixed(2) | formatT}}</div>
+        <div class="d-flex flex-column align-items-end justify-content-end my-4 pr-2 border-bottom border-white" v-if="!showClientForm && showTotals">
+            <div class="h5 mb-0"><span class="text-info h4">Total:</span> {{ baseNum(factura.totalFactura) }}</div>
+            <div class="h5 mb-0"><span class="text-info h4">TVA 19%:</span> {{ baseNum(factura.totalFacturaTva) }}</div>
             <div class="h5 mb-0"><span class="text-info h4">Platit:</span> 0</div>
-            <div class="h5 "><span class="text-info h4">Total + TVA:</span> {{factura.totalFacturaPlusTva.toFixed(2) | formatT}}</div>
+            <div class="h5 "><span class="text-info h4">Total + TVA:</span> {{ baseNum(factura.totalFacturaPlusTva) }}</div>
         </div>
         <div class="d-flex flex-column flex-md-row mx-2 mx-md-0">
-            <div class="d-flex justify-content-between" v-if="factura.totalFactura != 0 && showClientForm == false">
+            <div class="d-flex justify-content-between" v-if="showClientForm == false">
                 <b-btn class="mt-3 w-auto mr-md-4" variant="outline-primary" block @click="addProduct">Adauga produs</b-btn>
                 <b-btn class="mt-3 w-auto mr-md-4" variant="outline-danger" block @click="removeLastProduct">Sterge ultimul produs</b-btn>
             </div>
             <div class="d-flex justify-content-between ml-md-auto" v-if="!showClientForm">
-                <b-btn v-if="factura.totalFacturaPlusTva != 0" class="mt-3 w-auto mr-md-4" variant="outline-success" block @click="saveInvoice">Salveaza</b-btn>
+                <b-btn class="mt-3 w-auto mr-md-4" variant="outline-success" block @click="saveInvoice">Salveaza</b-btn>
                 <b-btn class="mt-3 w-auto mr-md-4" variant="outline-info" block @click="showClientForm = true">Modifica client</b-btn>
                 <b-btn class="mt-3 w-auto" variant="outline-danger" block @click="resetGenerateInvoice">Renunta</b-btn>
             </div>
@@ -154,6 +165,7 @@ export default {
                 banca: '',
                 sucursala: '',
                 produse: [{
+                    garantie: false,
                     descriere: 'Prestari servicii',
                     unitate: '',
                     pret: 0,
@@ -164,6 +176,8 @@ export default {
                 totalFacturaTva: 0,
                 totalFacturaPlusTva: 0
             },
+            garantie: false,
+            showTotals: false,
             showClientForm: true,
             id: '',
             userDate: new Date(),
@@ -179,9 +193,7 @@ export default {
         }
     },
     updated() {
-        this.normalizeProducts()
-        this.getTotals()
-        
+        // this.getTotals()
     },
     methods: {
         ...mapActions({
@@ -221,6 +233,7 @@ export default {
         },
         addProduct() {
             this.factura.produse.push({
+                garantie: false,
                 descriere: 'Prestari servicii',
                 unitate: '',
                 pret: 0,
@@ -231,24 +244,41 @@ export default {
         removeLastProduct() {
             this.factura.produse.splice(-1, 1);
         },
-        normalizeProducts() {
-            this.factura.produse.forEach(el => {
-                el.valoarea = parseFloat(el.pret) * parseInt(el.cantitatea);
-                el.cantitatea = parseFloat(el.cantitatea);
-                el.pret = parseFloat(el.pret);
-            });
-            this.factura.data = this.userDate;
-        },
-        getTotals() {
-            var total = 0;
-            var vm = this;
+        calcValue() {
+            var totalProduse = 0;
+            var garantie = 0;
 
-            vm.factura.produse.forEach(el => {
-                total += el.valoarea;
+            this.showTotals = true;
+
+            this.factura.produse.forEach(el => {
+                let total = el.cantitatea * el.pret;
+                el.valoarea = this.baseNum(total);
+
+                if(el.garantie === false) {
+                    totalProduse += total;
+                } else {
+                    garantie += total;
+                }
+               
             });
-            vm.factura.totalFactura = parseFloat(total);
-            vm.factura.totalFacturaTva = vm.factura.totalFactura * 0.19;
-            vm.factura.totalFacturaPlusTva = vm.factura.totalFactura + vm.factura.totalFacturaTva;
+
+            if(totalProduse < 0) {
+                this.factura.totalFactura = 0;
+                this.factura.totalFacturaTva = 0;
+                this.factura.totalFacturaPlusTva = 0;
+            } else {
+                this.factura.totalFactura = totalProduse;
+                this.factura.totalFacturaTva = this.baseNum(this.factura.totalFactura) * 0.19;
+                this.factura.totalFacturaPlusTva = this.factura.totalFactura + this.factura.totalFacturaTva;
+
+                if(garantie > 0) {
+                    this.factura.totalFactura += garantie;
+                    this.factura.totalFacturaPlusTva += garantie;
+                }
+            }
+        },
+        baseNum(num) {
+            return parseFloat(num).toFixed(2);
         },
         saveInvoice() {
             if (this.invAction === 'newInvoice') {
@@ -294,6 +324,7 @@ export default {
                 ).then(
                     setTimeout(() => {
                         this.showClientForm = true
+                        this.showTotals = false
                     }, 1500)
                 )
             }
