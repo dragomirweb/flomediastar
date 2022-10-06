@@ -13,6 +13,8 @@ const Situation = require("./models/situation");
 
 const app = express();
 
+//ss
+
 app.use(morgan("combined"));
 app.use(bodyParser.json());
 app.use(cors());
