@@ -16,6 +16,7 @@ const app = express();
 app.use(morgan("combined"));
 app.use(bodyParser.json());
 app.use(cors());
+// app.use(express.static(path.join(__dirname, 'public')));   
 
 mongoose.connect('mongodb://' + process.env.DB_USER + ':' + process.env.DB_PASS + '@ds143593.mlab.com:43593/flomediastar', { useNewUrlParser: true });
 var db = mongoose.connection;
